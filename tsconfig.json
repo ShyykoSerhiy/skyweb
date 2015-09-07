@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"target": "ES5",
+		"module": "commonjs",
+		"outDir": "./dist",
+		"sourceMap": true,
+		"removeComments": true		
+	},
+	"files": [
+		"skyweb.ts",
+		"login.ts",
+		"skype_account.ts",
+		"utils.ts",
+		"consts.ts",
+		"./demo/demo.ts"
+	]
+}

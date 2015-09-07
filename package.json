@@ -1,0 +1,16 @@
+{
+  "name": "skyweb",
+  "description": "Unofficial Skype API for nodejs via 'Skype (HTTP)'",
+  "version": "0.0.1",
+  "main": "./dist/skyweb.js",
+  "keywords": [
+    "Skype"
+  ],
+  "dependencies": {
+    "big-integer": "^1.5.6",
+    "cheerio": "^0.19.0",
+    "js-sha256": "^0.3.0",
+    "request": "2.61",
+    "tough-cookie": "^2.0.0"
+  }
+}

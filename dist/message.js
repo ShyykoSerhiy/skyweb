@@ -1,0 +1,33 @@
+/// <reference path='./typings/node/node.d.ts' />
+/// <reference path='./typings/request/request.d.ts' />
+var request = require('request');
+var Consts = require('./consts');
+var Utils = require('./utils');
+'use strict';
+var MessageService = (function () {
+    function MessageService() {
+    }
+    MessageService.sendMessage = function (skypeAccount, conversationId, message) {
+        var requestBody = JSON.stringify({
+            'content': message,
+            'messagetype': 'RichText',
+            'contenttype': 'text'
+        });
+        console.log('sending message ' + requestBody);
+        request.post(Consts.SKYPEWEB_HTTPS + skypeAccount.messagesHost + '/v1/users/ME/conversations/' + conversationId + '/messages', {
+            body: requestBody,
+            headers: {
+                'RegistrationToken': skypeAccount.registrationTokenParams.raw
+            }
+        }, function (error, response, body) {
+            if (!error && response.statusCode === 201) {
+            }
+            else {
+                Utils.throwError();
+            }
+        });
+    };
+    return MessageService;
+})();
+module.exports = MessageService;
+//# sourceMappingURL=message.js.map
