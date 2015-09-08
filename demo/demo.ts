@@ -9,6 +9,8 @@ if (!username || !password) {
 var skyweb = new Skyweb();
 skyweb.login(username, password).then((skypeAccount) => {
     console.log('Skyweb is initialized now');
+    console.log('Here is some info about you:' + JSON.stringify(skyweb.skypeAccount.selfInfo, null, 2));
+    console.log('Your contacts : ' + JSON.stringify(skyweb.contactsService.contacts, null, 2));
 });
 skyweb.messagesCallback = (messages) => {
     messages.forEach((message)=> {

@@ -15,7 +15,7 @@ import url = require('url');
 var requestWithJar = request.defaults({jar: true});
 
 function getSelfDisplayName(skypeAccout:SkypeAccount, resolve, reject) {
-    requestWithJar.get(Consts.SKYPEWEB_HTTPS + Consts.SKYPEWEB_CONTACTS_HOST + Consts.SKYPEWEB_SELF_DISPLAYNAME_URL, {
+    requestWithJar.get(Consts.SKYPEWEB_HTTPS + Consts.SKYPEWEB_API_SKYPE_HOST + Consts.SKYPEWEB_SELF_DISPLAYNAME_URL, {
         headers: {
             'X-Skypetoken': skypeAccout.skypeToken
         }

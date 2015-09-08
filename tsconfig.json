@@ -12,6 +12,7 @@
 		"skype_account.ts",
 		"utils.ts",
 		"consts.ts",
+		"contacts_service.ts",
 		"./demo/demo.ts"
 	]
 }

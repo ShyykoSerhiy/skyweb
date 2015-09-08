@@ -22,6 +22,14 @@ skyweb.login(username, password).then(function (skypeAccount) {
 });
 ```
 
+###Getting contacts info
+```
+var skyweb = new Skyweb();
+skyweb.login(username, password).then((skypeAccount) => {    
+    console.log('Your contacts : ' + JSON.stringify(skyweb.contactsService.contacts, null, 2));
+});
+```
+
 ##Disclaimer 
 This project relies on SkypeWeb Skype implementation. If Microsoft Corporation decides to remove Skype
 implementation (or change it in any) skyweb might not be in working state. Therefore it's not recommended to use it 
