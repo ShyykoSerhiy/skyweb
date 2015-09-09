@@ -24,7 +24,7 @@ function getSelfDisplayName(skypeAccout:SkypeAccount, resolve, reject) {
             skypeAccout.selfInfo = JSON.parse(body);
             resolve(skypeAccout);
         } else {
-            Utils.throwError();
+            Utils.throwError('Failed to get selfInfo.');
         }
     });
 }
@@ -51,7 +51,7 @@ function subscribeToResources(skypeAccount:SkypeAccount, resolve, reject) {
         if (!error && response.statusCode === 201) {
             resolve(skypeAccount);
         } else {
-            Utils.throwError();
+            Utils.throwError('Failed to subscribe to resources.');
         }
     });
 }
@@ -94,7 +94,7 @@ function getRegistrationToken(skypeAccount:SkypeAccount, resolve, reject) {
                 raw: registrationTokenHeader
             });
             if (!registrationTokenParams.registrationToken || !registrationTokenParams.expires || !registrationTokenParams.endpointId) {
-                Utils.throwError();
+                Utils.throwError('Failed to find registrationToken or expires or endpointId.');
             }
             registrationTokenParams.expires = parseInt(registrationTokenParams.expires);
 
@@ -104,7 +104,7 @@ function getRegistrationToken(skypeAccount:SkypeAccount, resolve, reject) {
             resolve(skypeAccount)
 
         } else {
-            Utils.throwError();
+            Utils.throwError('Failed to get registrationToken.');
         }
     });
 }
@@ -119,7 +119,7 @@ function sendLoginRequest(skypeAccount:SkypeAccount, resolve, reject) {
             var etm = $('input[name="etm"]').val();
 
             if (!pie || !etm) {
-                Utils.throwError();
+                Utils.throwError('Failed to find pie or etm.');
             }
 
 
@@ -144,11 +144,11 @@ function sendLoginRequest(skypeAccount:SkypeAccount, resolve, reject) {
 
                     resolve(skypeAccount);
                 } else {
-                    Utils.throwError();
+                    Utils.throwError('Failed to get skypetoken');
                 }
             });
         } else {
-            Utils.throwError();
+            Utils.throwError('Failed to get pie and etm. Login failed.');
         }
     });
 }

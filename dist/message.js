@@ -23,7 +23,7 @@ var MessageService = (function () {
             if (!error && response.statusCode === 201) {
             }
             else {
-                Utils.throwError();
+                Utils.throwError('Failed to send message.');
             }
         });
     };

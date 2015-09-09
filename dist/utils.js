@@ -4,8 +4,8 @@ var bigInt = require("big-integer");
 var Utils = (function () {
     function Utils() {
     }
-    Utils.throwError = function () {
-        console.error('Something went wrong!');
+    Utils.throwError = function (message) {
+        console.error('Something went wrong!' + message);
     };
     Utils.getCurrentTime = function () {
         return (new Date().getTime()) / 1000;

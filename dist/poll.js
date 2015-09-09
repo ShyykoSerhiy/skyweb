@@ -25,7 +25,7 @@ function pollAll(skypeAccount, messagesCallback) {
                 parsePollResult(JSON.parse(body), messagesCallback);
             }
             else {
-                Utils.throwError();
+                Utils.throwError('Failed to poll messages.');
             }
             pollAll(skypeAccount, messagesCallback);
         });

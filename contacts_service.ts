@@ -20,7 +20,7 @@ class ContactsService {
                 this.contacts = JSON.parse(body).contacts;
                 resolve(skypeAccount, this.contacts);
             } else {
-                Utils.throwError();
+                Utils.throwError('Failed to load contacts.');
             }
         });
     }

@@ -19,7 +19,7 @@ var ContactsService = (function () {
                 resolve(skypeAccount, _this.contacts);
             }
             else {
-                Utils.throwError();
+                Utils.throwError('Failed to load contacts.');
             }
         });
     };

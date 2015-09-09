@@ -3,8 +3,8 @@ var sha256 = require('js-sha256');
 var bigInt = require("big-integer");
 
 class Utils {
-    static throwError() {
-        console.error('Something went wrong!'); //FIXME
+    static throwError(message) {
+        console.error('Something went wrong!' + message); //FIXME
     }
 
     static getCurrentTime() {

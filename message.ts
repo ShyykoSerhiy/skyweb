@@ -26,7 +26,7 @@ class MessageService {
             if (!error && response.statusCode === 201) {
                 //fixme? send success callback?
             } else {
-                Utils.throwError();
+                Utils.throwError('Failed to send message.');
             }
         });
     }

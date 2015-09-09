@@ -29,7 +29,7 @@ export function pollAll(skypeAccount:SkypeAccount, messagesCallback:(messages:Ar
             if (!error && response.statusCode === 200) {
                 parsePollResult(JSON.parse(body), messagesCallback);
             } else {
-                Utils.throwError();
+                Utils.throwError('Failed to poll messages.');
             }
             pollAll(skypeAccount, messagesCallback);
         });
