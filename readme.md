@@ -12,7 +12,7 @@ node demo.js username password
 ```
 After 'Skyweb is initialized now' appears in console any message you receive in your Skype will be automatically replied.
 
-##Ussage
+##Usage
 ###Initializing and login
 ```
 Skyweb = require('skyweb');
