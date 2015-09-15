@@ -5,16 +5,17 @@ var Consts = require('./consts');
 var Utils = require('./utils');
 'use strict';
 var MessageService = (function () {
-    function MessageService() {
+    function MessageService(cookieJar) {
+        this.requestWithJar = request.defaults({ jar: cookieJar });
     }
-    MessageService.sendMessage = function (skypeAccount, conversationId, message) {
+    MessageService.prototype.sendMessage = function (skypeAccount, conversationId, message) {
         var requestBody = JSON.stringify({
             'content': message,
             'messagetype': 'RichText',
             'contenttype': 'text'
         });
         console.log('sending message ' + requestBody);
-        request.post(Consts.SKYPEWEB_HTTPS + skypeAccount.messagesHost + '/v1/users/ME/conversations/' + conversationId + '/messages', {
+        this.requestWithJar.post(Consts.SKYPEWEB_HTTPS + skypeAccount.messagesHost + '/v1/users/ME/conversations/' + conversationId + '/messages', {
             body: requestBody,
             headers: {
                 'RegistrationToken': skypeAccount.registrationTokenParams.raw

@@ -5,10 +5,17 @@ import Consts = require('./consts');
 import SkypeAccount = require('./skype_account');
 import Utils = require('./utils');
 import http = require('http');
+import {CookieJar} from "request";
 'use strict';
 
 class MessageService {
-    static sendMessage(skypeAccount:SkypeAccount, conversationId:string, message:string) {
+    private requestWithJar;
+
+    constructor(cookieJar:CookieJar) {
+        this.requestWithJar = request.defaults({jar: cookieJar});
+    }
+
+    public sendMessage(skypeAccount:SkypeAccount, conversationId:string, message:string) {
         var requestBody = JSON.stringify({
             ///'clientmessageid': Utils.getCurrentTime() + '', //fixme looks like we don't need this?(at least if we don't want to
             // have the ability to modify text(content) of the message.)
@@ -17,7 +24,7 @@ class MessageService {
             'contenttype': 'text'
         });
         console.log('sending message ' + requestBody);
-        request.post(Consts.SKYPEWEB_HTTPS + skypeAccount.messagesHost + '/v1/users/ME/conversations/' + conversationId + '/messages', {
+        this.requestWithJar.post(Consts.SKYPEWEB_HTTPS + skypeAccount.messagesHost + '/v1/users/ME/conversations/' + conversationId + '/messages', {
             body: requestBody,
             headers: {
                 'RegistrationToken': skypeAccount.registrationTokenParams.raw
