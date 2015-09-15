@@ -5,13 +5,19 @@ import Consts = require('./consts');
 import SkypeAccount = require('./skype_account');
 import Utils = require('./utils');
 import http = require('http');
+import {CookieJar} from "request";
 'use strict';
 
 class ContactsService {
     public contacts:Array<{}>;
+    private requestWithJar;
+
+    constructor(cookieJar:CookieJar) {
+        this.requestWithJar = request.defaults({jar: cookieJar});
+    }
 
     public loadContacts(skypeAccount:SkypeAccount, resolve:(skypeAccount:SkypeAccount, contacts:Array<{}>)=>{}, reject):void {
-        request.get(Consts.SKYPEWEB_HTTPS + Consts.SKYPEWEB_CONTACTS_HOST + '/contacts/v1/users/' + skypeAccount.selfInfo.username + '/contacts', {
+        this.requestWithJar.get(Consts.SKYPEWEB_HTTPS + Consts.SKYPEWEB_CONTACTS_HOST + '/contacts/v1/users/' + skypeAccount.selfInfo.username + '/contacts', {
             headers: {
                 'X-Skypetoken': skypeAccount.skypeToken
             }

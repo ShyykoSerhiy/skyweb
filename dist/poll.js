@@ -4,32 +4,39 @@ var request = require('request');
 var Consts = require('./consts');
 var Utils = require("./utils");
 "use strict";
-function parsePollResult(pollResult, messagesCallback) {
-    if (pollResult.eventMessages) {
-        var messages = pollResult.eventMessages.filter(function (item) {
-            return item.resourceType === 'NewMessage';
-        });
-        if (messages.length) {
-            messagesCallback(messages);
-        }
+var Poll = (function () {
+    function Poll(cookieJar) {
+        this.requestWithJar = request.defaults({ jar: cookieJar });
     }
-}
-function pollAll(skypeAccount, messagesCallback) {
-    setTimeout(function () {
-        request.post(Consts.SKYPEWEB_HTTPS + skypeAccount.messagesHost + '/v1/users/ME/endpoints/SELF/subscriptions/0/poll', {
-            headers: {
-                'RegistrationToken': skypeAccount.registrationTokenParams.raw
+    Poll.prototype.pollAll = function (skypeAccount, messagesCallback) {
+        var _this = this;
+        setTimeout(function () {
+            _this.requestWithJar.post(Consts.SKYPEWEB_HTTPS + skypeAccount.messagesHost + '/v1/users/ME/endpoints/SELF/subscriptions/0/poll', {
+                headers: {
+                    'RegistrationToken': skypeAccount.registrationTokenParams.raw
+                }
+            }, function (error, response, body) {
+                if (!error && response.statusCode === 200) {
+                    Poll.parsePollResult(JSON.parse(body), messagesCallback);
+                }
+                else {
+                    Utils.throwError('Failed to poll messages.');
+                }
+                _this.pollAll(skypeAccount, messagesCallback);
+            });
+        }, 1000);
+    };
+    Poll.parsePollResult = function (pollResult, messagesCallback) {
+        if (pollResult.eventMessages) {
+            var messages = pollResult.eventMessages.filter(function (item) {
+                return item.resourceType === 'NewMessage';
+            });
+            if (messages.length) {
+                messagesCallback(messages);
             }
-        }, function (error, response, body) {
-            if (!error && response.statusCode === 200) {
-                parsePollResult(JSON.parse(body), messagesCallback);
-            }
-            else {
-                Utils.throwError('Failed to poll messages.');
-            }
-            pollAll(skypeAccount, messagesCallback);
-        });
-    }, 1000);
-}
-exports.pollAll = pollAll;
+        }
+    };
+    return Poll;
+})();
+module.exports = Poll;
 //# sourceMappingURL=poll.js.map

@@ -5,11 +5,12 @@ var Consts = require('./consts');
 var Utils = require('./utils');
 'use strict';
 var ContactsService = (function () {
-    function ContactsService() {
+    function ContactsService(cookieJar) {
+        this.requestWithJar = request.defaults({ jar: cookieJar });
     }
     ContactsService.prototype.loadContacts = function (skypeAccount, resolve, reject) {
         var _this = this;
-        request.get(Consts.SKYPEWEB_HTTPS + Consts.SKYPEWEB_CONTACTS_HOST + '/contacts/v1/users/' + skypeAccount.selfInfo.username + '/contacts', {
+        this.requestWithJar.get(Consts.SKYPEWEB_HTTPS + Consts.SKYPEWEB_CONTACTS_HOST + '/contacts/v1/users/' + skypeAccount.selfInfo.username + '/contacts', {
             headers: {
                 'X-Skypetoken': skypeAccount.skypeToken
             }
