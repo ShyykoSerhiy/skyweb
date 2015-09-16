@@ -31,7 +31,7 @@ skyweb.login(username, password).then((skypeAccount) => {
 ```
 
 ##What's not working and probably never will.
-* [Old P2P group chats](https://github.com/ShyykoSerhiy/skyweb/issues/6). Accourding to  [Skype community site ](http://community.skype.com/t5/Skype-for-Web-Beta/Group-chats-missing-on-skype-web/td-p/3884218) only new, Cloud based group chats are shown in SkypeWeb Beta(therefore works in this API). The old P2P group chats are not.  
+* [Old P2P group chats](https://github.com/ShyykoSerhiy/skyweb/issues/6). According to  [Skype community site ](http://community.skype.com/t5/Skype-for-Web-Beta/Group-chats-missing-on-skype-web/td-p/3884218) only new, Cloud based group chats are shown in SkypeWeb Beta(therefore works in this API). The old P2P group chats are not.  
 
 ##Disclaimer 
 This project relies on SkypeWeb Skype implementation. If Microsoft Corporation decides to remove Skype
