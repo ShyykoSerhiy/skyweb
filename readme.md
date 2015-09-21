@@ -37,3 +37,6 @@ skyweb.login(username, password).then((skypeAccount) => {
 This project relies on SkypeWeb Skype implementation. If Microsoft Corporation decides to remove Skype
 implementation (or change it in any) skyweb might not be in working state. Therefore it's not recommended to use it 
 in any critical part of production code. In fact it's not recommended to use it in production at all.
+
+[MIT License](https://github.com/ShyykoSerhiy/skyweb/blob/master/LICENSE.md).
+
