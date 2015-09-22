@@ -1,7 +1,8 @@
 {
   "name": "skyweb",
   "description": "Unofficial Skype API for nodejs via 'Skype (HTTP)'",
-  "version": "0.0.1",
+  "version": "0.0.2",
+  "license": "MIT",
   "main": "./dist/skyweb.js",
   "keywords": [
     "Skype"
