@@ -3,7 +3,7 @@ Unofficial Skype API for nodejs via 'Skype (HTTP)' protocol.
 
 ##Running example
 As username and password you should use your Skype account(There is no support for Microsoft account for now).
-```
+```sh
 git clone https://github.com/ShyykoSerhiy/skyweb.git
 cd skyweb
 npm install
@@ -14,7 +14,7 @@ After 'Skyweb is initialized now' appears in console any message you receive in 
 
 ##Usage
 ###Initializing and login
-```
+```js
 Skyweb = require('skyweb');
 var skyweb = new Skyweb();
 skyweb.login(username, password).then(function (skypeAccount) {
@@ -23,7 +23,7 @@ skyweb.login(username, password).then(function (skypeAccount) {
 ```
 
 ###Getting contacts info
-```
+```js
 var skyweb = new Skyweb();
 skyweb.login(username, password).then((skypeAccount) => {    
     console.log('Your contacts : ' + JSON.stringify(skyweb.contactsService.contacts, null, 2));
