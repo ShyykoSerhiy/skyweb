@@ -10,6 +10,14 @@ skyweb.login(username, password).then(function (skypeAccount) {
     console.log('Here is some info about you:' + JSON.stringify(skyweb.skypeAccount.selfInfo, null, 2));
     console.log('Your contacts : ' + JSON.stringify(skyweb.contactsService.contacts, null, 2));
 });
+
+skype.requestCallback = function (requests) {
+	messages.forEach(function (request) {
+		skype.acceptUserRequest(request.sender);
+		skype.sendMessage("8:" + request.sender, "I accepted you!");
+	});
+};
+
 skyweb.messagesCallback = function (messages) {
     messages.forEach(function (message) {
         if (message.resource.from.indexOf(username) === -1 && message.resource.messagetype !== 'Control/Typing' && message.resource.messagetype !== 'Control/ClearTyping') {
