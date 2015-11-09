@@ -1,8 +1,8 @@
-/// <reference path='../typings/tsd.d.ts' />
+/// <reference path='../../typings/tsd.d.ts' />
 import request = require('request');
-import Consts = require('./consts');
-import SkypeAccount = require('./skype_account');
-import Utils = require("./utils");
+import Consts = require('./../consts');
+import SkypeAccount = require('./../skype_account');
+import Utils = require("./../utils");
 import http = require('http');
 import {CookieJar} from "request";
 "use strict";

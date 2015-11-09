@@ -12,6 +12,12 @@ skyweb.login(username, password).then((skypeAccount) => {
     console.log('Here is some info about you:' + JSON.stringify(skyweb.skypeAccount.selfInfo, null, 2));
     console.log('Your contacts : ' + JSON.stringify(skyweb.contactsService.contacts, null, 2));
 });
+skyweb.authRequestCallback = (requests) => {
+    requests.forEach((request) => {
+        skyweb.acceptAuthRequest(request.sender);
+        skyweb.sendMessage("8:" + request.sender, "I accepted you!");
+    });
+};
 skyweb.messagesCallback = (messages) => {
     messages.forEach((message)=> {
         if (message.resource.from.indexOf(username) === -1 && message.resource.messagetype !== 'Control/Typing' && message.resource.messagetype !== 'Control/ClearTyping') {
