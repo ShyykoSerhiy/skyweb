@@ -1,8 +1,4 @@
-/// <reference path='./typings/node/node.d.ts' />
-/// <reference path='./typings/form-data/form-data.d.ts' />
-/// <reference path='./typings/cheerio/cheerio.d.ts' />
-/// <reference path='./typings/request/request.d.ts' />
-/// <reference path='./typings/es6-promise/es6-promise.d.ts' />
+/// <reference path='../typings/tsd.d.ts' />
 import request = require('request');
 import cheerio = require('cheerio');
 import Utils = require('./utils');
@@ -43,7 +39,7 @@ class Login {
                 if (!pie || !etm) {
                     Utils.throwError('Failed to find pie or etm.');
                 }
-                
+
                 var postParams = {
                     url: Consts.SKYPEWEB_LOGIN_URL,
                     form: {
@@ -61,7 +57,7 @@ class Login {
                         var $ = cheerio.load(body);
                         skypeAccount.skypeToken = $('input[name="skypetoken"]').val();
                         skypeAccount.skypeTokenExpiresIn = parseInt($('input[name="expires_in"]').val());//86400 by default
-                        if (skypeAccount.skypeToken && skypeAccount.skypeTokenExpiresIn){
+                        if (skypeAccount.skypeToken && skypeAccount.skypeTokenExpiresIn) {
                             resolve(skypeAccount);
                         } else {
                             Utils.throwError('Failed to get skypetoken. Username or password is incorrect OR you\'ve' +
@@ -129,7 +125,7 @@ class Login {
             }
         });
     }
-    
+
     private subscribeToResources(skypeAccount:SkypeAccount, resolve, reject) {
         var interestedResources = [
             '/v1/threads/ALL',

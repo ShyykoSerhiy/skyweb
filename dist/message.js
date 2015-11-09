@@ -1,5 +1,4 @@
-/// <reference path='./typings/node/node.d.ts' />
-/// <reference path='./typings/request/request.d.ts' />
+/// <reference path='../typings/tsd.d.ts' />
 var request = require('request');
 var Consts = require('./consts');
 var Utils = require('./utils');

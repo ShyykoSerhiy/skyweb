@@ -7,12 +7,13 @@
 		"removeComments": true		
 	},
 	"files": [
-		"skyweb.ts",
-		"login.ts",
-		"skype_account.ts",
-		"utils.ts",
-		"consts.ts",
-		"contacts_service.ts",
-		"./demo/demo.ts"
+		"src/skyweb.ts",
+		"src/login.ts",
+		"src/skype_account.ts",
+		"src/utils.ts",
+		"src/consts.ts",
+		"src/message.ts",
+		"src/contacts_service.ts",
+		"src/demo/demo.ts"
 	]
 }
