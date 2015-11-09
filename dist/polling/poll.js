@@ -1,7 +1,7 @@
-/// <reference path='../typings/tsd.d.ts' />
+/// <reference path='../../typings/tsd.d.ts' />
 var request = require('request');
-var Consts = require('./consts');
-var Utils = require("./utils");
+var Consts = require('./../consts');
+var Utils = require("./../utils");
 "use strict";
 var Poll = (function () {
     function Poll(cookieJar) {
