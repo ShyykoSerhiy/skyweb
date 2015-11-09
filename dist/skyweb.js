@@ -4,11 +4,14 @@ var request = require('request');
 var Login = require("./login");
 var Poll = require("./poll");
 var MessageService = require("./message");
+var AuthRequest = require("./auth-request");
+var RequestService = require("./requestService");
 var Skyweb = (function () {
     function Skyweb() {
         this.cookieJar = request.jar();
         this.contactsService = new ContactsService(this.cookieJar);
         this.messageService = new MessageService(this.cookieJar);
+				this.requestService = new RequestService(this.cookieJar);
     }
     Skyweb.prototype.login = function (username, password) {
         var _this = this;
@@ -22,11 +25,23 @@ var Skyweb = (function () {
                     me.messagesCallback(messages);
                 }
             });
+						new AuthRequest(_this.cookieJar).pollAll(skypeAccount, function (requestData) {
+                if (me.requestCallback) {
+                    me.requestCallback(requestData);
+                }
+            });
             return skypeAccount;
         });
     };
+		
     Skyweb.prototype.sendMessage = function (conversationId, message) {
         this.messageService.sendMessage(this.skypeAccount, conversationId, message);
+    };
+		Skyweb.prototype.acceptUserRequest = function (userName) {
+				return this.requestService.accept(this.skypeAccount, userName);
+    };
+		Skyweb.prototype.declineUserRequest = function (userName) {
+				return this.requestService.decline(this.skypeAccount, userName);
     };
     return Skyweb;
 })();
