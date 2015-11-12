@@ -122,7 +122,7 @@ class Login {
                 resolve(skypeAccount)
 
             } else {
-                Utils.throwError('Failed to get registrationToken.');
+                Utils.throwError('Failed to get registrationToken.' + error + JSON.stringify(response));
             }
         });
     }
