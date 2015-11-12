@@ -9,6 +9,7 @@ import Poll = require("./polling/poll");
 import MessageService = require("./message");
 import AuthRequest = require("./polling/auth_request");
 import RequestService = require("./request_service");
+import {Promise} from "es6-promise";
 
 class Skyweb {
     public messagesCallback:(messages:Array<any>)=>void;

@@ -4,6 +4,7 @@ var cheerio = require('cheerio');
 var Utils = require('./utils');
 var Consts = require('./consts');
 var url = require('url');
+var es6_promise_1 = require("es6-promise");
 'use strict';
 var Login = (function () {
     function Login(cookieJar) {
@@ -11,10 +12,10 @@ var Login = (function () {
     }
     Login.prototype.doLogin = function (skypeAccount) {
         var _this = this;
-        var functions = [new Promise(this.sendLoginRequest.bind(this, skypeAccount)), this.getRegistrationToken, this.subscribeToResources, this.getSelfDisplayName];
+        var functions = [new es6_promise_1.Promise(this.sendLoginRequest.bind(this, skypeAccount)), this.getRegistrationToken, this.subscribeToResources, this.getSelfDisplayName];
         return (functions.reduce(function (previousValue, currentValue) {
             return previousValue.then(function (skypeAccount) {
-                return new Promise(currentValue.bind(_this, skypeAccount));
+                return new es6_promise_1.Promise(currentValue.bind(_this, skypeAccount));
             });
         }));
     };

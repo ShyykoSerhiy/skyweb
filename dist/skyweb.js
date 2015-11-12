@@ -6,6 +6,7 @@ var Poll = require("./polling/poll");
 var MessageService = require("./message");
 var AuthRequest = require("./polling/auth_request");
 var RequestService = require("./request_service");
+var es6_promise_1 = require("es6-promise");
 var Skyweb = (function () {
     function Skyweb() {
         this.cookieJar = request.jar();
@@ -17,7 +18,7 @@ var Skyweb = (function () {
         var _this = this;
         this.skypeAccount = new SkypeAccount(username, password);
         return new Login(this.cookieJar).doLogin(this.skypeAccount).then(function (skypeAccount) {
-            return new Promise(_this.contactsService.loadContacts.bind(_this.contactsService, skypeAccount));
+            return new es6_promise_1.Promise(_this.contactsService.loadContacts.bind(_this.contactsService, skypeAccount));
         }).then(function (skypeAccount) {
             new Poll(_this.cookieJar).pollAll(skypeAccount, function (messages) {
                 if (_this.messagesCallback) {

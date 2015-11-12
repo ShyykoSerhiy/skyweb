@@ -7,6 +7,7 @@ import Consts = require('./consts');
 import http = require('http');
 import url = require('url');
 import {CookieJar} from "request";
+import {Promise} from "es6-promise";
 
 'use strict';
 
