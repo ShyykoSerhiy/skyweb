@@ -49,8 +49,8 @@ class Skyweb {
         });
     }
 
-    sendMessage(conversationId:string, message:string) {
-        this.messageService.sendMessage(this.skypeAccount, conversationId, message);
+    sendMessage(conversationId:string, message:string, messagetype?:string, contenttype?:string) {
+        this.messageService.sendMessage(this.skypeAccount, conversationId, message, messagetype, contenttype);
     }
 
     acceptAuthRequest(username) {

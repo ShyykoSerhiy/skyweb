@@ -7,11 +7,11 @@ var MessageService = (function () {
     function MessageService(cookieJar) {
         this.requestWithJar = request.defaults({ jar: cookieJar });
     }
-    MessageService.prototype.sendMessage = function (skypeAccount, conversationId, message) {
+    MessageService.prototype.sendMessage = function (skypeAccount, conversationId, message, messagetype, contenttype) {
         var requestBody = JSON.stringify({
             'content': message,
-            'messagetype': 'RichText',
-            'contenttype': 'text'
+            'messagetype': messagetype || 'RichText',
+            'contenttype': contenttype || 'text'
         });
         console.log('sending message ' + requestBody);
         this.requestWithJar.post(Consts.SKYPEWEB_HTTPS + skypeAccount.messagesHost + '/v1/users/ME/conversations/' + conversationId + '/messages', {

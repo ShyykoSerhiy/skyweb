@@ -14,13 +14,13 @@ class MessageService {
         this.requestWithJar = request.defaults({jar: cookieJar});
     }
 
-    public sendMessage(skypeAccount:SkypeAccount, conversationId:string, message:string) {
+    public sendMessage(skypeAccount:SkypeAccount, conversationId:string, message:string, messagetype?:string, contenttype?:string) {
         var requestBody = JSON.stringify({
             ///'clientmessageid': Utils.getCurrentTime() + '', //fixme looks like we don't need this?(at least if we don't want to
             // have the ability to modify text(content) of the message.)
             'content': message,
-            'messagetype': 'RichText',
-            'contenttype': 'text'
+            'messagetype': messagetype || 'RichText',
+            'contenttype': contenttype || 'text'
         });
         console.log('sending message ' + requestBody);
         this.requestWithJar.post(Consts.SKYPEWEB_HTTPS + skypeAccount.messagesHost + '/v1/users/ME/conversations/' + conversationId + '/messages', {

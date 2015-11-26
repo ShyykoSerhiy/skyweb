@@ -33,8 +33,8 @@ var Skyweb = (function () {
             return skypeAccount;
         });
     };
-    Skyweb.prototype.sendMessage = function (conversationId, message) {
-        this.messageService.sendMessage(this.skypeAccount, conversationId, message);
+    Skyweb.prototype.sendMessage = function (conversationId, message, messagetype, contenttype) {
+        this.messageService.sendMessage(this.skypeAccount, conversationId, message, messagetype, contenttype);
     };
     Skyweb.prototype.acceptAuthRequest = function (username) {
         return this.requestService.accept(this.skypeAccount, username);
