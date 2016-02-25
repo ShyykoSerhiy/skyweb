@@ -6,7 +6,7 @@ import request = require('request');
 import {CookieJar} from "request";
 import Login = require("./login");
 import Poll = require("./polling/poll");
-import MessageService = require("./message");
+import MessageService = require("./message_service");
 import AuthRequest = require("./polling/auth_request");
 import RequestService = require("./request_service");
 import {Promise} from "es6-promise";

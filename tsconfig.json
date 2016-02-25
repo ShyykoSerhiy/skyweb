@@ -12,7 +12,7 @@
     "src/skype_account.ts",
     "src/utils.ts",
     "src/consts.ts",
-    "src/message.ts",
+    "src/message_service.ts",
     "src/contacts_service.ts",
     "src/request_service.ts",
     "src/polling/auth_request.ts",

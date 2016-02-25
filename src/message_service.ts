@@ -22,7 +22,6 @@ class MessageService {
             'messagetype': messagetype || 'RichText',
             'contenttype': contenttype || 'text'
         });
-        console.log('sending message ' + requestBody);
         this.requestWithJar.post(Consts.SKYPEWEB_HTTPS + skypeAccount.messagesHost + '/v1/users/ME/conversations/' + conversationId + '/messages', {
             body: requestBody,
             headers: {
