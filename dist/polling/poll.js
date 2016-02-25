@@ -1,4 +1,3 @@
-/// <reference path='../../typings/tsd.d.ts' />
 var request = require('request');
 var Consts = require('./../consts');
 var Utils = require("./../utils");
@@ -19,7 +18,10 @@ var Poll = (function () {
                     Poll.parsePollResult(JSON.parse(body), messagesCallback);
                 }
                 else {
-                    Utils.throwError('Failed to poll messages.');
+                    Utils.throwError('Failed to poll messages.' +
+                        '.\n Error code: ' + response.statusCode +
+                        '.\n Error: ' + error +
+                        '.\n Body: ' + body);
                 }
                 _this.pollAll(skypeAccount, messagesCallback);
             });

@@ -1,4 +1,3 @@
-/// <reference path='../typings/tsd.d.ts' />
 var request = require('request');
 var cheerio = require('cheerio');
 var Utils = require('./utils');
@@ -12,7 +11,7 @@ var Login = (function () {
     }
     Login.prototype.doLogin = function (skypeAccount) {
         var _this = this;
-        var functions = [new es6_promise_1.Promise(this.sendLoginRequest.bind(this, skypeAccount)), this.getRegistrationToken, this.subscribeToResources, this.getSelfDisplayName];
+        var functions = [new es6_promise_1.Promise(this.sendLoginRequest.bind(this, skypeAccount)), this.getRegistrationToken, this.subscribeToResources, this.createStatusEndpoint, this.getSelfDisplayName];
         return (functions.reduce(function (previousValue, currentValue) {
             return previousValue.then(function (skypeAccount) {
                 return new es6_promise_1.Promise(currentValue.bind(_this, skypeAccount));
@@ -133,6 +132,42 @@ var Login = (function () {
             }
             else {
                 Utils.throwError('Failed to subscribe to resources.');
+            }
+        });
+    };
+    Login.prototype.createStatusEndpoint = function (skypeAccount, resolve, reject) {
+        if (!skypeAccount.registrationTokenParams.endpointId) {
+            resolve(skypeAccount);
+            return;
+        }
+        var requestBody = JSON.stringify({
+            "id": "messagingService",
+            "type": "EndpointPresenceDoc",
+            "selfLink": "uri",
+            "privateInfo": { "epname": "skype" },
+            "publicInfo": {
+                "capabilities": "video|audio",
+                "type": 1,
+                "skypeNameVersion": Consts.SKYPEWEB_CLIENTINFO_NAME,
+                "nodeInfo": "xx",
+                "version": Consts.SKYPEWEB_CLIENTINFO_VERSION + '//' + Consts.SKYPEWEB_CLIENTINFO_NAME
+            }
+        });
+        this.requestWithJar.put(Consts.SKYPEWEB_HTTPS + skypeAccount.messagesHost +
+            '/v1/users/ME/endpoints/' + skypeAccount.registrationTokenParams.endpointId + '/presenceDocs/messagingService', {
+            body: requestBody,
+            headers: {
+                'RegistrationToken': skypeAccount.registrationTokenParams.raw
+            }
+        }, function (error, response, body) {
+            if (!error && response.statusCode === 200) {
+                resolve(skypeAccount);
+            }
+            else {
+                Utils.throwError('Failed to create endpoint for status.' +
+                    '.\n Error code: ' + response.statusCode +
+                    '.\n Error: ' + error +
+                    '.\n Body: ' + body);
             }
         });
     };

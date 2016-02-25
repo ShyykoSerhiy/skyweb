@@ -7,8 +7,10 @@ import {CookieJar} from "request";
 import Login = require("./login");
 import Poll = require("./polling/poll");
 import MessageService = require("./message_service");
+import StatusService = require("./status_service");
 import AuthRequest = require("./polling/auth_request");
 import RequestService = require("./request_service");
+import Status = require("./status/status");
 import {Promise} from "es6-promise";
 
 class Skyweb {
@@ -18,6 +20,7 @@ class Skyweb {
     public contactsService:ContactsService;
     private messageService:MessageService;
     private requestService:RequestService;
+    private statusService:StatusService;
     /**
      * CookieJar that is used for this Skyweb instance
      */
@@ -28,6 +31,7 @@ class Skyweb {
         this.contactsService = new ContactsService(this.cookieJar);
         this.messageService = new MessageService(this.cookieJar);
         this.requestService = new RequestService(this.cookieJar);
+        this.statusService = new StatusService(this.cookieJar);
     }
 
     login(username, password):Promise<{}> {
@@ -51,6 +55,10 @@ class Skyweb {
 
     sendMessage(conversationId:string, message:string, messagetype?:string, contenttype?:string) {
         this.messageService.sendMessage(this.skypeAccount, conversationId, message, messagetype, contenttype);
+    }
+
+    setStatus(status:Status) {
+        this.statusService.setStatus(this.skypeAccount, status);
     }
 
     acceptAuthRequest(username) {

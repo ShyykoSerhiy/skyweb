@@ -5,33 +5,30 @@ import SkypeAccount = require('./skype_account');
 import Utils = require('./utils');
 import http = require('http');
 import {CookieJar} from "request";
+import Status = require("./status/status");
 'use strict';
 
-class MessageService {
+class StatusService {
     private requestWithJar;
 
     constructor(cookieJar:CookieJar) {
         this.requestWithJar = request.defaults({jar: cookieJar});
     }
 
-    public sendMessage(skypeAccount:SkypeAccount, conversationId:string, message:string, messagetype?:string, contenttype?:string) {
+    public setStatus(skypeAccount:SkypeAccount, status: Status) {
         var requestBody = JSON.stringify({
-            ///'clientmessageid': Utils.getCurrentTime() + '', //fixme looks like we don't need this?(at least if we don't want to
-            // have the ability to modify text(content) of the message.)
-            'content': message,
-            'messagetype': messagetype || 'RichText',
-            'contenttype': contenttype || 'text'
+            status: status
         });
-        this.requestWithJar.post(Consts.SKYPEWEB_HTTPS + skypeAccount.messagesHost + '/v1/users/ME/conversations/' + conversationId + '/messages', {
+        this.requestWithJar.put(Consts.SKYPEWEB_HTTPS + skypeAccount.messagesHost + '/v1/users/ME/presenceDocs/messagingService', {
             body: requestBody,
             headers: {
                 'RegistrationToken': skypeAccount.registrationTokenParams.raw
             }
         }, (error:any, response:http.IncomingMessage, body:any) => {
-            if (!error && response.statusCode === 201) {
+            if (!error && response.statusCode === 200) {
                 //fixme? send success callback?
             } else {
-                Utils.throwError('Failed to send message.' +
+                Utils.throwError('Failed to change status' +
                     '.\n Error code: ' + response.statusCode +
                     '.\n Error: ' + error +
                     '.\n Body: ' + body
@@ -41,4 +38,4 @@ class MessageService {
     }
 }
 
-export = MessageService;
+export = StatusService;

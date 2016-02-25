@@ -30,6 +30,15 @@ skyweb.login(username, password).then((skypeAccount) => {
 });
 ```
 
+###Setting status
+```js
+var skyweb = new Skyweb();
+skyweb.login(username, password).then((skypeAccount) => {
+    skyweb.setStatus('Hidden'); //Now everybody thinks I'm sleeping
+});
+```
+Currenly supported values are : "Hidden" | "Online" | "Away" | "Busy"
+
 ##What's not working and probably never will.
 * [Old P2P group chats](https://github.com/ShyykoSerhiy/skyweb/issues/6). According to  [Skype community site ](http://community.skype.com/t5/Skype-for-Web-Beta/Group-chats-missing-on-skype-web/td-p/3884218) only new, Cloud based group chats are shown in SkypeWeb Beta(therefore works in this API). The old P2P group chats are not.  
 

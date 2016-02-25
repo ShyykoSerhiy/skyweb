@@ -24,7 +24,11 @@ class Poll {
                 if (!error && response.statusCode === 200) {
                     Poll.parsePollResult(JSON.parse(body), messagesCallback);
                 } else {
-                    Utils.throwError('Failed to poll messages.');
+                    Utils.throwError('Failed to poll messages.' +
+                        '.\n Error code: ' + response.statusCode +
+                        '.\n Error: ' + error +
+                        '.\n Body: ' + body
+                    );
                 }
                 this.pollAll(skypeAccount, messagesCallback);
             });

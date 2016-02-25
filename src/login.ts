@@ -19,7 +19,7 @@ class Login {
     }
 
     public doLogin(skypeAccount:SkypeAccount) {
-        var functions = [new Promise(this.sendLoginRequest.bind(this, skypeAccount)), this.getRegistrationToken, this.subscribeToResources, this.getSelfDisplayName];
+        var functions = [new Promise(this.sendLoginRequest.bind(this, skypeAccount)), this.getRegistrationToken, this.subscribeToResources, this.createStatusEndpoint, this.getSelfDisplayName];
 
         return <Promise<{}>>(functions.reduce((previousValue:Promise<{}>, currentValue)=> {
             return previousValue.then((skypeAccount:SkypeAccount) => {
@@ -150,6 +150,46 @@ class Login {
                 resolve(skypeAccount);
             } else {
                 Utils.throwError('Failed to subscribe to resources.');
+            }
+        });
+    }
+
+    private createStatusEndpoint(skypeAccount:SkypeAccount, resolve, reject) {
+        if (!skypeAccount.registrationTokenParams.endpointId){
+            //there is no need in this case to create endpoint?
+            resolve(skypeAccount);
+            return;
+        }
+        //a little bit more of skype madness
+        var requestBody = JSON.stringify({ //this is exact json that is needed to register endpoint for setting of status.
+            "id": "messagingService",
+            "type": "EndpointPresenceDoc",
+            "selfLink": "uri",
+            "privateInfo": {"epname": "skype"},
+            "publicInfo": {
+                "capabilities": "video|audio",
+                "type": 1,
+                "skypeNameVersion": Consts.SKYPEWEB_CLIENTINFO_NAME,
+                "nodeInfo": "xx",
+                "version": Consts.SKYPEWEB_CLIENTINFO_VERSION + '//' + Consts.SKYPEWEB_CLIENTINFO_NAME
+            }
+        });
+
+        this.requestWithJar.put(Consts.SKYPEWEB_HTTPS + skypeAccount.messagesHost +
+            '/v1/users/ME/endpoints/' + skypeAccount.registrationTokenParams.endpointId + '/presenceDocs/messagingService', {
+            body: requestBody,
+            headers: {
+                'RegistrationToken': skypeAccount.registrationTokenParams.raw
+            }
+        }, (error:any, response:http.IncomingMessage, body:any) => {
+            if (!error && response.statusCode === 200) {
+                resolve(skypeAccount);
+            } else {
+                Utils.throwError('Failed to create endpoint for status.' +
+                    '.\n Error code: ' + response.statusCode +
+                    '.\n Error: ' + error +
+                    '.\n Body: ' + body
+                );
             }
         });
     }

@@ -9,6 +9,8 @@ skyweb.login(username, password).then(function (skypeAccount) {
     console.log('Skyweb is initialized now');
     console.log('Here is some info about you:' + JSON.stringify(skyweb.skypeAccount.selfInfo, null, 2));
     console.log('Your contacts : ' + JSON.stringify(skyweb.contactsService.contacts, null, 2));
+    console.log('Going incognito.');
+    skyweb.setStatus('Hidden');
 });
 skyweb.authRequestCallback = function (requests) {
     requests.forEach(function (request) {

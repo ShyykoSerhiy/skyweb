@@ -1,4 +1,3 @@
-/// <reference path='../typings/tsd.d.ts' />
 var request = require('request');
 var Consts = require('./consts');
 var Utils = require('./utils');

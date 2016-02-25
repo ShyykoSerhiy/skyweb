@@ -1,4 +1,3 @@
-/// <reference path='../typings/tsd.d.ts' />
 var request = require('request');
 var Consts = require('./consts');
 var Utils = require('./utils');
@@ -13,7 +12,6 @@ var MessageService = (function () {
             'messagetype': messagetype || 'RichText',
             'contenttype': contenttype || 'text'
         });
-        console.log('sending message ' + requestBody);
         this.requestWithJar.post(Consts.SKYPEWEB_HTTPS + skypeAccount.messagesHost + '/v1/users/ME/conversations/' + conversationId + '/messages', {
             body: requestBody,
             headers: {
@@ -23,11 +21,14 @@ var MessageService = (function () {
             if (!error && response.statusCode === 201) {
             }
             else {
-                Utils.throwError('Failed to send message.');
+                Utils.throwError('Failed to send message.' +
+                    '.\n Error code: ' + response.statusCode +
+                    '.\n Error: ' + error +
+                    '.\n Body: ' + body);
             }
         });
     };
     return MessageService;
 })();
 module.exports = MessageService;
-//# sourceMappingURL=message.js.map
+//# sourceMappingURL=message_service.js.map
