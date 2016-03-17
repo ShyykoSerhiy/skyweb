@@ -19,7 +19,7 @@ var Poll = (function () {
                 }
                 else {
                     Utils.throwError('Failed to poll messages.' +
-                        '.\n Error code: ' + response.statusCode +
+                        '.\n Error code: ' + (response && response.statusCode ? response.statusCode : 'none') +
                         '.\n Error: ' + error +
                         '.\n Body: ' + body);
                 }
