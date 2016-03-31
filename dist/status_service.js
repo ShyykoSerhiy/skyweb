@@ -1,7 +1,7 @@
+"use strict";
 var request = require('request');
 var Consts = require('./consts');
 var Utils = require('./utils');
-'use strict';
 var StatusService = (function () {
     function StatusService(cookieJar) {
         this.requestWithJar = request.defaults({ jar: cookieJar });
@@ -27,6 +27,6 @@ var StatusService = (function () {
         });
     };
     return StatusService;
-})();
+}());
 module.exports = StatusService;
 //# sourceMappingURL=status_service.js.map

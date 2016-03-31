@@ -1,3 +1,4 @@
+"use strict";
 var SkypeAccount = require('./skype_account');
 var ContactsService = require('./contacts_service');
 var request = require('request');
@@ -48,6 +49,6 @@ var Skyweb = (function () {
         return this.requestService.decline(this.skypeAccount, username);
     };
     return Skyweb;
-})();
+}());
 module.exports = Skyweb;
 //# sourceMappingURL=skyweb.js.map

@@ -1,3 +1,4 @@
+"use strict";
 var request = require('request');
 var Consts = require('./consts');
 var Utils = require('./utils');
@@ -34,6 +35,6 @@ var RequestService = (function () {
         });
     };
     return RequestService;
-})();
+}());
 module.exports = RequestService;
 //# sourceMappingURL=request_service.js.map

@@ -1,3 +1,4 @@
+"use strict";
 exports.SKYPEWEB_HTTPS = 'https://';
 exports.SKYPEWEB_LOCKANDKEY_APPID = 'msmsgs@msnmsgr.com';
 exports.SKYPEWEB_LOCKANDKEY_SECRET = 'Q1P7W2E4J9R8U3S5';

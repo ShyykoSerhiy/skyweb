@@ -1,3 +1,4 @@
+"use strict";
 var request = require('request');
 var Consts = require('./consts');
 var Utils = require('./utils');
@@ -29,6 +30,6 @@ var MessageService = (function () {
         });
     };
     return MessageService;
-})();
+}());
 module.exports = MessageService;
 //# sourceMappingURL=message_service.js.map

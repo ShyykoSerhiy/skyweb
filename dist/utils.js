@@ -1,3 +1,4 @@
+"use strict";
 var sha256 = require('js-sha256');
 var bigInt = require("big-integer");
 var Utils = (function () {
@@ -168,6 +169,6 @@ var Utils = (function () {
         return int32ToHexString(a) + int32ToHexString(b) + int32ToHexString(c) + int32ToHexString(d);
     };
     return Utils;
-})();
+}());
 module.exports = Utils;
 //# sourceMappingURL=utils.js.map

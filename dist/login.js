@@ -1,3 +1,4 @@
+"use strict";
 var request = require('request');
 var cheerio = require('cheerio');
 var Utils = require('./utils');
@@ -187,6 +188,6 @@ var Login = (function () {
         });
     };
     return Login;
-})();
+}());
 module.exports = Login;
 //# sourceMappingURL=login.js.map

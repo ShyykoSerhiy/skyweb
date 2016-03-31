@@ -6,7 +6,6 @@ import Utils = require('./utils');
 import http = require('http');
 import {CookieJar} from "request";
 import Status = require("./status/status");
-'use strict';
 
 class StatusService {
     private requestWithJar;

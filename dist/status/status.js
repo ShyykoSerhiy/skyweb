@@ -1,2 +1,2 @@
-"Hidden" | "Online" | "Away" | "Busy";
+"use strict";
 //# sourceMappingURL=status.js.map

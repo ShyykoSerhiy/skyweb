@@ -1,3 +1,4 @@
+"use strict";
 var request = require('request');
 var Consts = require('./../consts');
 var Utils = require("./../utils");
@@ -24,6 +25,6 @@ var AuthRequest = (function () {
         this.requestWithJar = request.defaults({ jar: cookieJar });
     }
     return AuthRequest;
-})();
+}());
 module.exports = AuthRequest;
 //# sourceMappingURL=auth_request.js.map

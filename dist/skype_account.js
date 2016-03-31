@@ -1,3 +1,4 @@
+"use strict";
 var Consts = require('./consts');
 var SkypeAccount = (function () {
     function SkypeAccount(username, password) {
@@ -76,6 +77,6 @@ var SkypeAccount = (function () {
         configurable: true
     });
     return SkypeAccount;
-})();
+}());
 module.exports = SkypeAccount;
 //# sourceMappingURL=skype_account.js.map

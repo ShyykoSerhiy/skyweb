@@ -1,3 +1,4 @@
+"use strict";
 var request = require('request');
 var Consts = require('./consts');
 var Utils = require('./utils');
@@ -23,6 +24,6 @@ var ContactsService = (function () {
         });
     };
     return ContactsService;
-})();
+}());
 module.exports = ContactsService;
 //# sourceMappingURL=contacts_service.js.map

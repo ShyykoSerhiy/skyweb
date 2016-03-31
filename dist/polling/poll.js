@@ -1,3 +1,4 @@
+"use strict";
 var request = require('request');
 var Consts = require('./../consts');
 var Utils = require("./../utils");
@@ -38,6 +39,6 @@ var Poll = (function () {
         }
     };
     return Poll;
-})();
+}());
 module.exports = Poll;
 //# sourceMappingURL=poll.js.map
