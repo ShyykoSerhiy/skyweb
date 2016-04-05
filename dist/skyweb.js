@@ -2,6 +2,7 @@ var SkypeAccount = require('./skype_account');
 var ContactsService = require('./contacts_service');
 var request = require('request');
 var Login = require("./login");
+var Logout = require("./logout");
 var Poll = require("./polling/poll");
 var MessageService = require("./message_service");
 var StatusService = require("./status_service");
@@ -33,6 +34,20 @@ var Skyweb = (function () {
                 }
             });
             return skypeAccount;
+        }).then(function (skypeAccount) {
+            setInterval(function() {
+                _this.relogin(username, password);
+            },Math.min(
+                Math.max(skypeAccount.registrationTokenParams.expires - ~~(Date.now()/1000) - 2*60*60,
+                  3*60*60),
+                12*60*60)*1000);
+        });
+    };
+    Skyweb.prototype.relogin = function (username, password) {
+        var _this = this;
+        new Logout(this.cookieJar).doLogout().then(function () {
+            _this.skypeAccount = new SkypeAccount(username, password);
+            return new Login(_this.cookieJar).doLogin(_this.skypeAccount);
         });
     };
     Skyweb.prototype.sendMessage = function (conversationId, message, messagetype, contenttype) {

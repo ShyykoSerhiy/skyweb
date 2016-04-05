@@ -7,5 +7,6 @@ exports.SKYPEWEB_API_SKYPE_HOST = 'api.skype.com';
 exports.SKYPEWEB_CONTACTS_HOST = "contacts.skype.com";
 exports.SKYPEWEB_DEFAULT_MESSAGES_HOST = 'client-s.gateway.messenger.live.com';
 exports.SKYPEWEB_LOGIN_URL = 'https://login.skype.com/login?method=skype&client_id=578134&redirect_uri=https%3A%2F%2Fweb.skype.com';
+exports.SKYPEWEB_LOGOUT_URL = 'https://login.skype.com/logout?client_id=578134&redirect_uri=https%3A%2F%2Fweb.skype.com&intsrc=client-_-webapp-_-production-_-go-signin';
 exports.SKYPEWEB_SELF_DISPLAYNAME_URL = '/users/self/displayname';
 //# sourceMappingURL=consts.js.map
