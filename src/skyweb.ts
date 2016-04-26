@@ -1,19 +1,18 @@
-/// <reference path='../typings/tsd.d.ts' />
-import poll = require('./polling/poll');
-import SkypeAccount = require('./skype_account');
-import ContactsService = require('./contacts_service');
-import request = require('request');
+import * as poll from './polling/poll';
+import SkypeAccount from './skype_account';
+import ContactsService from './contacts_service';
+import * as request from 'request';
 import {CookieJar} from "request";
-import Login = require("./login");
-import Poll = require("./polling/poll");
-import MessageService = require("./message_service");
-import StatusService = require("./status_service");
-import AuthRequest = require("./polling/auth_request");
-import RequestService = require("./request_service");
-import Status = require("./status/status");
+import Login from "./login";
+import Poll from "./polling/poll";
+import MessageService from "./message_service";
+import StatusService from "./status_service";
+import AuthRequest from "./polling/auth_request";
+import RequestService from "./request_service";
+import Status from "./status/status";
 import {Promise} from "es6-promise";
 
-class Skyweb {
+export class Skyweb {
     public messagesCallback:(messages:Array<any>)=>void;
     public authRequestCallback:(messages:Array<any>)=>void;
     public skypeAccount:SkypeAccount;
@@ -34,7 +33,7 @@ class Skyweb {
         this.statusService = new StatusService(this.cookieJar);
     }
 
-    login(username, password):Promise<{}> {
+    login(username: any, password: any):Promise<{}> {
         this.skypeAccount = new SkypeAccount(username, password);
         return new Login(this.cookieJar).doLogin(this.skypeAccount).then((skypeAccount:SkypeAccount)=> {
             return new Promise(this.contactsService.loadContacts.bind(this.contactsService, skypeAccount));
@@ -44,7 +43,7 @@ class Skyweb {
                     this.messagesCallback(messages);
                 }
             });
-            new AuthRequest(this.cookieJar).pollAll(skypeAccount, (requestData) => {
+            new AuthRequest(this.cookieJar).pollAll(skypeAccount, (requestData: any) => {
                 if (this.authRequestCallback) {
                     this.authRequestCallback(requestData);
                 }
@@ -61,13 +60,13 @@ class Skyweb {
         this.statusService.setStatus(this.skypeAccount, status);
     }
 
-    acceptAuthRequest(username) {
+    acceptAuthRequest(username: any) {
         return this.requestService.accept(this.skypeAccount, username);
     }
 
-    declineAuthRequest(username) {
+    declineAuthRequest(username: any) {
         return this.requestService.decline(this.skypeAccount, username);
     }
 }
 
-export = Skyweb;
+export default Skyweb;

@@ -1,18 +1,15 @@
-/// <reference path='../typings/tsd.d.ts' />
-import request = require('request');
-import cheerio = require('cheerio');
-import Utils = require('./utils');
-import SkypeAccount = require('./skype_account');
-import Consts = require('./consts');
-import http = require('http');
-import url = require('url');
+import * as request from 'request';
+import * as cheerio from 'cheerio';
+import Utils from './utils';
+import SkypeAccount from './skype_account';
+import * as Consts from './consts';
+import * as http from 'http';
+import * as url from 'url';
 import {CookieJar} from "request";
 import {Promise} from "es6-promise";
 
-'use strict';
-
-class Login {
-    private requestWithJar;
+export class Login {
+    private requestWithJar: any;
 
     constructor(cookieJar:CookieJar) {
         this.requestWithJar = request.defaults({jar: cookieJar});
@@ -21,15 +18,15 @@ class Login {
     public doLogin(skypeAccount:SkypeAccount) {
         var functions = [new Promise(this.sendLoginRequest.bind(this, skypeAccount)), this.getRegistrationToken, this.subscribeToResources, this.createStatusEndpoint, this.getSelfDisplayName];
 
-        return <Promise<{}>>(functions.reduce((previousValue:Promise<{}>, currentValue)=> {
+        return <Promise<{}>>(functions.reduce((previousValue:Promise<{}>, currentValue: any)=> {
             return previousValue.then((skypeAccount:SkypeAccount) => {
                 return new Promise(currentValue.bind(this, skypeAccount));
             });
         }));
     }
 
-    private sendLoginRequest(skypeAccount:SkypeAccount, resolve, reject) {
-        this.requestWithJar.get(Consts.SKYPEWEB_LOGIN_URL, (error, response, body) => {
+    private sendLoginRequest(skypeAccount:SkypeAccount, resolve: any, reject: any) {
+        this.requestWithJar.get(Consts.SKYPEWEB_LOGIN_URL, (error: Error, response: any, body: any) => {
             if (!error && response.statusCode == 200) {
                 var $ = cheerio.load(body);
 
@@ -53,7 +50,7 @@ class Login {
                     }
                 };
                 //auth step
-                this.requestWithJar.post(postParams, (error, response, body) => {
+                this.requestWithJar.post(postParams, (error: Error, response: any, body: any) => {
                     if (!error && response.statusCode == 200) {
                         var $ = cheerio.load(body);
                         skypeAccount.skypeToken = $('input[name="skypetoken"]').val();
@@ -74,7 +71,7 @@ class Login {
         });
     }
 
-    private getRegistrationToken(skypeAccount:SkypeAccount, resolve, reject) {
+    private getRegistrationToken(skypeAccount:SkypeAccount, resolve: any, reject: any) {
         var currentTime = Utils.getCurrentTime();
         var lockAndKeyResponse = Utils.getMac256Hash(currentTime, Consts.SKYPEWEB_LOCKANDKEY_APPID, Consts.SKYPEWEB_LOCKANDKEY_SECRET);
         this.requestWithJar.post(Consts.SKYPEWEB_HTTPS + skypeAccount.messagesHost + '/v1/users/ME/endpoints', {
@@ -88,7 +85,7 @@ class Login {
             //now lets try retrieve registration token
             if (!error && response.statusCode === 201 || response.statusCode === 301) {
                 var locationHeader = response.headers['location'];
-                //expecting something like this 'registrationToken=someSting; expires=someNumber; endpointId={someString}' 
+                //expecting something like this 'registrationToken=someSting; expires=someNumber; endpointId={someString}'
                 var registrationTokenHeader = response.headers['set-registrationtoken'];
                 var location = url.parse(locationHeader);
                 if (location.host !== skypeAccount.messagesHost) { //mainly when 301, but sometimes when 201
@@ -98,7 +95,7 @@ class Login {
                     return;
                 }
 
-                var registrationTokenParams = registrationTokenHeader.split(/\s*;\s*/).reduce((params, current:string) => {
+                var registrationTokenParams = registrationTokenHeader.split(/\s*;\s*/).reduce((params: any, current:string) => {
                     if (current.indexOf('registrationToken') === 0) {
                         params['registrationToken'] = current;
                     } else {
@@ -127,7 +124,7 @@ class Login {
         });
     }
 
-    private subscribeToResources(skypeAccount:SkypeAccount, resolve, reject) {
+    private subscribeToResources(skypeAccount:SkypeAccount, resolve: any, reject: any) {
         var interestedResources = [
             '/v1/threads/ALL',
             '/v1/users/ME/contacts/ALL',
@@ -137,7 +134,7 @@ class Login {
         var requestBody = JSON.stringify({
             interestedResources: interestedResources,
             template: 'raw',
-            channelType: 'httpLongPoll'//todo web sockets maybe ? 
+            channelType: 'httpLongPoll'//todo web sockets maybe ?
         });
 
         this.requestWithJar.post(Consts.SKYPEWEB_HTTPS + skypeAccount.messagesHost + '/v1/users/ME/endpoints/SELF/subscriptions', {
@@ -154,7 +151,7 @@ class Login {
         });
     }
 
-    private createStatusEndpoint(skypeAccount:SkypeAccount, resolve, reject) {
+    private createStatusEndpoint(skypeAccount:SkypeAccount, resolve: any, reject: any) {
         if (!skypeAccount.registrationTokenParams.endpointId){
             //there is no need in this case to create endpoint?
             resolve(skypeAccount);
@@ -194,7 +191,7 @@ class Login {
         });
     }
 
-    private getSelfDisplayName(skypeAccout:SkypeAccount, resolve, reject) {
+    private getSelfDisplayName(skypeAccout:SkypeAccount, resolve: any, reject: any) {
         this.requestWithJar.get(Consts.SKYPEWEB_HTTPS + Consts.SKYPEWEB_API_SKYPE_HOST + Consts.SKYPEWEB_SELF_DISPLAYNAME_URL, {
             headers: {
                 'X-Skypetoken': skypeAccout.skypeToken
@@ -210,4 +207,4 @@ class Login {
     }
 }
 
-export = Login;
+export default Login;

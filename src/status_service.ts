@@ -1,14 +1,13 @@
-/// <reference path='../typings/tsd.d.ts' />
-import request = require('request');
-import Consts = require('./consts');
-import SkypeAccount = require('./skype_account');
-import Utils = require('./utils');
-import http = require('http');
+import * as request from 'request';
+import * as Consts from './consts';
+import SkypeAccount from './skype_account';
+import Utils from './utils';
+import * as http from 'http';
 import {CookieJar} from "request";
-import Status = require("./status/status");
+import Status from "./status/status";
 
-class StatusService {
-    private requestWithJar;
+export class StatusService {
+    private requestWithJar: any;
 
     constructor(cookieJar:CookieJar) {
         this.requestWithJar = request.defaults({jar: cookieJar});
@@ -37,4 +36,4 @@ class StatusService {
     }
 }
 
-export = StatusService;
+export default StatusService;

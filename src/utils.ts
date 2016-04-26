@@ -1,9 +1,8 @@
-/// <reference path='../typings/tsd.d.ts' />
-var sha256 = require('js-sha256');
-var bigInt = require("big-integer");
+import * as sha256 from "js-sha256";
+import * as bigInt from "big-integer";
 
-class Utils {
-    static throwError(message) {
+export class Utils {
+    static throwError(message: any) {
         console.error('Something went wrong!' + message); //FIXME
     }
 
@@ -12,14 +11,14 @@ class Utils {
     }
 
     static getTimezone() {
-        var pad = function (n, c) {
+        var pad = function (n: any, c: any) {
             if ((n = n + "").length < c) {
                 return new Array(++c - n.length).join("0") + n;
             } else {
                 return n;
             }
         };
-        var sign;
+        var sign: any;
         var timezone = new Date().getTimezoneOffset() * (-1);
         if (timezone >= 0) {
             sign = "+";
@@ -36,9 +35,9 @@ class Utils {
         return sign + hours + "|" + minutes;
     }
 
-    static getMac256Hash(challenge, appId, key) {
-        function padRight(original, totalWidth, ch) {
-            function stringFromChar(ch, count) {
+    static getMac256Hash(challenge: any, appId: any, key: any) {
+        function padRight(original: any, totalWidth: any, ch: any) {
+            function stringFromChar(ch: any, count: any) {
                 var s = ch;
                 for (var i = 1; i < count; i++) {
                     s += ch;
@@ -78,7 +77,7 @@ class Utils {
             var sC = '';
             var sD = '';
             var diff = Math.abs(sA.length - sB.length);
-            var i;
+            var i: any;
 
             for (i = 0; i < diff; i++) {
                 sD += '0';
@@ -157,9 +156,9 @@ class Utils {
         }
 
         var cchClearText = clearText.length / 4;
-        var pClearText = [];
-        var i;
-        var pos;
+        var pClearText: any[] = [];
+        var i: any;
+        var pos: any;
         for (i = 0, pos = 0; i < cchClearText; i++) {
             pClearText.splice(i, 0, 0);
             pClearText[i] = pClearText[i] + clearText.charCodeAt(pos++) * 1;
@@ -193,4 +192,4 @@ class Utils {
     }
 }
 
-export = Utils;
+export default Utils;

@@ -1,14 +1,12 @@
-/// <reference path='../typings/tsd.d.ts' />
-import request = require('request');
-import Consts = require('./consts');
-import SkypeAccount = require('./skype_account');
-import Utils = require('./utils');
-import http = require('http');
+import * as request from 'request';
+import * as Consts from './consts';
+import SkypeAccount from './skype_account';
+import Utils from './utils';
+import * as http from 'http';
 import {CookieJar} from "request";
-'use strict';
 
-class MessageService {
-    private requestWithJar;
+export class MessageService {
+    private requestWithJar: any;
 
     constructor(cookieJar:CookieJar) {
         this.requestWithJar = request.defaults({jar: cookieJar});
@@ -41,4 +39,4 @@ class MessageService {
     }
 }
 
-export = MessageService;
+export default MessageService;
