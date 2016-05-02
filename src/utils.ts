@@ -1,4 +1,3 @@
-/// <reference path='../typings/tsd.d.ts' />
 var sha256 = require('js-sha256');
 var bigInt = require("big-integer");
 

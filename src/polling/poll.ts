@@ -1,4 +1,3 @@
-/// <reference path='../../typings/tsd.d.ts' />
 import request = require('request');
 import Consts = require('./../consts');
 import SkypeAccount = require('./../skype_account');

@@ -1,4 +1,3 @@
-/// <reference path='../typings/tsd.d.ts' />
 import request = require('request');
 import cheerio = require('cheerio');
 import Utils = require('./utils');

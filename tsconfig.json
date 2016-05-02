@@ -7,6 +7,7 @@
     "removeComments": true
   },
   "files": [
+    "typings/main.d.ts",
     "src/skyweb.ts",
     "src/login.ts",
     "src/skype_account.ts",
