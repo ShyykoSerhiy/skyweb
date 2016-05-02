@@ -1,0 +1,13 @@
+{
+  "name": "skyweb",
+  "version": false,
+  "dependencies": {},
+  "ambientDependencies": {
+    "big-integer": "registry:dt/big-integer#0.0.0+20160319061115",
+    "cheerio": "registry:dt/cheerio#0.17.0+20160407085313",
+    "es6-promise": "registry:dt/es6-promise#0.0.0+20160423074304",
+    "form-data": "registry:dt/form-data#0.0.0+20160316155526",
+    "node": "registry:dt/node#4.0.0+20160501135006",
+    "request": "registry:dt/request#0.0.0+20160316155526"
+  }
+}
