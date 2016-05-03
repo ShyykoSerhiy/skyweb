@@ -1,20 +1,19 @@
-import request = require('request');
-import Consts = require('./consts');
-import SkypeAccount = require('./skype_account');
-import Utils = require('./utils');
-import http = require('http');
+import * as request from 'request';
+import * as Consts from './consts';
+import SkypeAccount from './skype_account';
+import Utils from './utils';
+import * as http from 'http';
 import {CookieJar} from "request";
-'use strict';
 
-class ContactsService {
+export class ContactsService {
     public contacts:Array<{}>;
-    private requestWithJar;
+    private requestWithJar: any;
 
     constructor(cookieJar:CookieJar) {
         this.requestWithJar = request.defaults({jar: cookieJar});
     }
 
-    public loadContacts(skypeAccount:SkypeAccount, resolve:(skypeAccount:SkypeAccount, contacts:Array<{}>)=>{}, reject):void {
+    public loadContacts(skypeAccount:SkypeAccount, resolve:(skypeAccount:SkypeAccount, contacts:Array<{}>)=>{}, reject: any):void {
         this.requestWithJar.get(Consts.SKYPEWEB_HTTPS + Consts.SKYPEWEB_CONTACTS_HOST + '/contacts/v1/users/' + skypeAccount.selfInfo.username + '/contacts', {
             headers: {
                 'X-Skypetoken': skypeAccount.skypeToken
@@ -30,6 +29,4 @@ class ContactsService {
     }
 }
 
-export = ContactsService;
-
-
+export default ContactsService;

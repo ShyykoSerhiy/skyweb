@@ -1,5 +1,5 @@
 "use strict";
-var sha256 = require('js-sha256');
+var sha256 = require("js-sha256");
 var bigInt = require("big-integer");
 var Utils = (function () {
     function Utils() {

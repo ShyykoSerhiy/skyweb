@@ -1,24 +1,24 @@
-import request = require('request');
-import Consts = require('./../consts');
-import SkypeAccount = require('./../skype_account');
-import Utils = require("./../utils");
-import http = require('http');
+import * as request from 'request';
+import * as Consts from './../consts';
+import SkypeAccount from './../skype_account';
+import Utils from "./../utils";
+import * as http from 'http';
 import {CookieJar} from "request";
 
-class AuthRequest {
-    private requestWithJar;
+export class AuthRequest {
+    private requestWithJar: any;
 
     constructor(cookieJar:CookieJar) {
         this.requestWithJar = request.defaults({jar: cookieJar});
     }
 
-    pollAll = function (skypeAccount, messagesCallback) {
+    pollAll = function (skypeAccount: any, messagesCallback: any) {
         setTimeout(()=> {
             this.requestWithJar.get(Consts.SKYPEWEB_HTTPS + Consts.SKYPEWEB_API_SKYPE_HOST + '/users/self/contacts/auth-request', {
                 headers: {
                     'X-Skypetoken': skypeAccount.skypeToken
                 }
-            }, (error, response, body)=> {
+            }, (error: any, response: any, body: any)=> {
                 if (!error && response.statusCode === 200) {
                     messagesCallback(JSON.parse(body));
                 }
@@ -31,4 +31,4 @@ class AuthRequest {
     }
 }
 
-export = AuthRequest;
+export default AuthRequest;
