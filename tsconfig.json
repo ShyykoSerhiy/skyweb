@@ -22,7 +22,6 @@
     "src/polling/auth_request.ts",
     "src/polling/poll.ts",
     "src/demo/demo.ts",
-    "typings/main.d.ts",
     "manual_typings/js-sha256.ts"
   ]
 }
