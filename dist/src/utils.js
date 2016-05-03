@@ -127,8 +127,8 @@ var Utils = (function () {
             qwMAC.mod(mod);
             qwSum.add(CS64_d);
             qwSum.mod(mod);
-            pOutHash[0] = parseInt(qwMAC.toString(), 10);
-            pOutHash[1] = parseInt(qwSum.toString(), 10);
+            pOutHash[0] = parseInt(qwMAC.toString(10), 10);
+            pOutHash[1] = parseInt(qwSum.toString(10), 10);
             return true;
         }
         var clearText = challenge + appId;

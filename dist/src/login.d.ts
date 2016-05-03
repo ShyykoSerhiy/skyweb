@@ -1,5 +1,6 @@
 import SkypeAccount from './skype_account';
 import { CookieJar } from "request";
+import { Promise } from "es6-promise";
 export declare class Login {
     private requestWithJar;
     constructor(cookieJar: CookieJar);
