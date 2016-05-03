@@ -1,13 +1,13 @@
 import * as  Consts from "./consts";
 
-interface RegistrationTokenParams {
+export interface RegistrationTokenParams {
     raw: string;
     registrationToken:string;
     expires: number;
     endpointId: string;
 }
 
-interface SelfInfo {
+export interface SelfInfo {
     displayname: string;
     firstname: string;
     lastname: string;
