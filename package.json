@@ -4,6 +4,10 @@
   "version": "0.0.4",
   "license": "MIT",
   "main": "./dist/skyweb.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ShyykoSerhiy/skyweb.git"
+  },
   "keywords": [
     "Skype"
   ],

@@ -1,3 +1,3 @@
-type Status = "Hidden" | "Online" | "Away" | "Busy";
+export type Status = "Hidden" | "Online" | "Away" | "Busy";
 
-export = Status;
+export default Status;
