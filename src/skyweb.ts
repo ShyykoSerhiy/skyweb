@@ -1,4 +1,3 @@
-/// <reference path='../typings/tsd.d.ts' />
 import poll = require('./polling/poll');
 import SkypeAccount = require('./skype_account');
 import ContactsService = require('./contacts_service');
