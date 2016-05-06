@@ -12,6 +12,8 @@ import RequestService from "./request_service";
 import Status from "./status/status";
 import {Promise} from "es6-promise";
 
+exports = Skyweb;
+
 export class Skyweb {
     public messagesCallback:(messages:Array<any>)=>void;
     public authRequestCallback:(messages:Array<any>)=>void;

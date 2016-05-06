@@ -9,6 +9,7 @@ var status_service_1 = require("./status_service");
 var auth_request_1 = require("./polling/auth_request");
 var request_service_1 = require("./request_service");
 var es6_promise_1 = require("es6-promise");
+exports = Skyweb;
 var Skyweb = (function () {
     function Skyweb() {
         this.cookieJar = request.jar();
