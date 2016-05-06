@@ -4,12 +4,15 @@ import SkypeAccount from './../skype_account';
 import Utils from "./../utils";
 import * as http from 'http';
 import {CookieJar} from "request";
+import {Login} from "../login";
 
 export class Poll {
     private requestWithJar: any;
+    private cookieJar:CookieJar;
 
     constructor(cookieJar:CookieJar) {
         this.requestWithJar = request.defaults({jar: cookieJar});
+        this.cookieJar = cookieJar;
     }
 
     public pollAll(skypeAccount: SkypeAccount, messagesCallback:(messages:Array<any>)=>void) {
@@ -21,6 +24,12 @@ export class Poll {
             }, (error:any, response:http.IncomingMessage, body:any) => {
                 if (!error && response.statusCode === 200) {
                     Poll.parsePollResult(JSON.parse(body), messagesCallback);
+                } else if (body && body.errorCode === 729) {
+                    // statusCode: 404.
+                    // body: {"errorCode":729,"message":"You must create an endpoint before performing this operation."}
+                    new Login(this.cookieJar).doLogin(skypeAccount)
+                        .then(this.pollAll.bind(this, skypeAccount, messagesCallback));
+                    return;
                 } else {
                     Utils.throwError('Failed to poll messages.' +
                         '.\n Error code: ' + (response && response.statusCode ? response.statusCode : 'none') +
