@@ -2,9 +2,11 @@
 var request = require('request');
 var Consts = require('./../consts');
 var utils_1 = require("./../utils");
+var login_1 = require("../login");
 var Poll = (function () {
     function Poll(cookieJar) {
         this.requestWithJar = request.defaults({ jar: cookieJar });
+        this.cookieJar = cookieJar;
     }
     Poll.prototype.pollAll = function (skypeAccount, messagesCallback) {
         var _this = this;
@@ -16,6 +18,11 @@ var Poll = (function () {
             }, function (error, response, body) {
                 if (!error && response.statusCode === 200) {
                     Poll.parsePollResult(JSON.parse(body), messagesCallback);
+                }
+                else if (body && body.errorCode === 729) {
+                    new login_1.Login(_this.cookieJar).doLogin(skypeAccount)
+                        .then(_this.pollAll.bind(_this, skypeAccount, messagesCallback));
+                    return;
                 }
                 else {
                     utils_1.default.throwError('Failed to poll messages.' +
