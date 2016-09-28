@@ -16,7 +16,7 @@
     "cheerio": "^0.19.0",
     "es6-promise": "^3.0.2",
     "js-sha256": "^0.3.0",
-    "request": "2.61",
+    "request": "2.74.0",
     "tough-cookie": "^2.0.0"
   }
 }
