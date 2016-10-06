@@ -1,4 +1,7 @@
 # Skyweb
+
+[![Known Vulnerabilities](https://snyk.io/test/github/ShyykoSerhiy/skyweb/bb52507de466338dec4abba7ac896a221a85bd56/badge.svg)](https://snyk.io/test/github/ShyykoSerhiy/skyweb/bb52507de466338dec4abba7ac896a221a85bd56)
+
 Unofficial Skype API for nodejs via 'Skype (HTTP)' protocol. 
 
 If you want to create a bot, take a look at https://github.com/Microsoft/BotBuilder first.👌  
