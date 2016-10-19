@@ -4,7 +4,7 @@ Unofficial Skype API for nodejs via 'Skype (HTTP)' protocol.
 If you want to create a bot, take a look at https://github.com/Microsoft/BotBuilder first.👌  
 
 ##Running example
-As username and password you should use your Skype account(There is no support for Microsoft account for now).
+As username and password you should use your Skype account or your Microsoft account.
 ```sh
 git clone https://github.com/ShyykoSerhiy/skyweb.git
 cd skyweb
