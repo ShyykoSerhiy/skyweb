@@ -5,6 +5,10 @@ var utils_1 = require('./utils');
 var Consts = require('./consts');
 var url = require('url');
 var es6_promise_1 = require("es6-promise");
+var rejectWithError = function (reject, error) {
+    utils_1.default.throwError(error);
+    reject(error);
+};
 var Login = (function () {
     function Login(cookieJar) {
         this.cookieJar = cookieJar;
@@ -27,7 +31,7 @@ var Login = (function () {
             if (!error && response.statusCode == 200) {
                 var ppft = /<input type="hidden" name="PPFT" id="i0327" value="([^"]+)"/g.exec(body)[1];
                 if (!ppft) {
-                    utils_1.default.throwError('Failed to find ppft inside.');
+                    rejectWithError(reject, 'Failed to find ppft inside.');
                 }
                 var postParams = {
                     url: Consts.SKYPEWEB_PPSECURE_OUTH_URL,
@@ -43,17 +47,17 @@ var Login = (function () {
                         var $ = cheerio.load(body);
                         var t = $('input[name="t"]').val();
                         if (!t) {
-                            utils_1.default.throwError('Failed to find t inside.');
+                            rejectWithError(reject, 'Failed to find t inside.');
                         }
                         resolve(t);
                     }
                     else {
-                        utils_1.default.throwError('Failed to get t');
+                        rejectWithError(reject, 'Failed to get t');
                     }
                 });
             }
             else {
-                utils_1.default.throwError('Failed to get pie and etm. Login failed.');
+                rejectWithError(reject, 'Failed while trying to get ppft');
             }
         });
     };
@@ -79,12 +83,12 @@ var Login = (function () {
                         resolve(skypeAccount);
                     }
                     else {
-                        utils_1.default.throwError('Failed to get skypetoken. Username or password is incorrect OR you\'ve' +
+                        rejectWithError(reject, 'Failed to get skypetoken. Username or password is incorrect OR you\'ve' +
                             ' hit a CAPTCHA wall.' + $('.message_error').text());
                     }
                 }
                 else {
-                    utils_1.default.throwError('Failed to get t');
+                    rejectWithError(reject, "Failed to get skypetocken " + error + " " + body + " " + response.statusCode);
                 }
             });
         });
@@ -125,14 +129,15 @@ var Login = (function () {
                     raw: registrationTokenHeader
                 });
                 if (!registrationTokenParams.registrationToken || !registrationTokenParams.expires || !registrationTokenParams.endpointId) {
-                    utils_1.default.throwError('Failed to find registrationToken or expires or endpointId.');
+                    rejectWithError(reject, 'Failed to find registrationToken or expires or endpointId.');
+                    return;
                 }
                 registrationTokenParams.expires = parseInt(registrationTokenParams.expires);
                 skypeAccount.registrationTokenParams = registrationTokenParams;
                 resolve(skypeAccount);
             }
             else {
-                utils_1.default.throwError('Failed to get registrationToken.' + error + JSON.stringify(response));
+                rejectWithError(reject, "Failed to get registrationToken. " + error + " " + JSON.stringify(response));
             }
         });
     };
@@ -158,7 +163,7 @@ var Login = (function () {
                 resolve(skypeAccount);
             }
             else {
-                utils_1.default.throwError('Failed to subscribe to resources.');
+                rejectWithError(reject, "Failed to subscribe to resources. " + error + " " + response.statusCode);
             }
         });
     };
@@ -191,7 +196,7 @@ var Login = (function () {
                 resolve(skypeAccount);
             }
             else {
-                utils_1.default.throwError('Failed to create endpoint for status.' +
+                rejectWithError(reject, 'Failed to create endpoint for status.' +
                     '.\n Error code: ' + response.statusCode +
                     '.\n Error: ' + error +
                     '.\n Body: ' + body);
@@ -209,7 +214,10 @@ var Login = (function () {
                 resolve(skypeAccout);
             }
             else {
-                utils_1.default.throwError('Failed to get selfInfo.');
+                rejectWithError(reject, 'Failed to get selfInfo.' +
+                    '.\n Error code: ' + response.statusCode +
+                    '.\n Error: ' + error +
+                    '.\n Body: ' + body);
             }
         });
     };

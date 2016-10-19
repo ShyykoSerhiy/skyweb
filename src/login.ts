@@ -8,6 +8,11 @@ import * as url from 'url';
 import {CookieJar} from "request";
 import {Promise} from "es6-promise";
 
+const rejectWithError = (reject:(reason?:any)=>void, error: string) => {
+    Utils.throwError(error);
+    reject(error);
+};
+
 export class Login {
     private requestWithJar: any;
     private cookieJar: CookieJar;
@@ -37,7 +42,7 @@ export class Login {
                 var ppft = /<input type="hidden" name="PPFT" id="i0327" value="([^"]+)"/g.exec(body)[1];
 
                 if (!ppft) {
-                    Utils.throwError('Failed to find ppft inside.');
+                    rejectWithError(reject, 'Failed to find ppft inside.');
                 }
 
                 var postParams = {
@@ -56,16 +61,16 @@ export class Login {
                         //we need this magic t
                         var t = $('input[name="t"]').val();
                         if (!t) {
-                            Utils.throwError('Failed to find t inside.');
+                            rejectWithError(reject, 'Failed to find t inside.');
                         }
 
                         resolve(t);
                     } else {
-                        Utils.throwError('Failed to get t');
+                        rejectWithError(reject, 'Failed to get t');
                     }
                 });
             } else {
-                Utils.throwError('Failed to get pie and etm. Login failed.');
+                rejectWithError(reject, 'Failed while trying to get ppft');
             }
         });
     }
@@ -90,11 +95,11 @@ export class Login {
                     if (skypeAccount.skypeToken && skypeAccount.skypeTokenExpiresIn) {
                         resolve(skypeAccount);
                     } else {
-                        Utils.throwError('Failed to get skypetoken. Username or password is incorrect OR you\'ve' +
+                        rejectWithError(reject, 'Failed to get skypetoken. Username or password is incorrect OR you\'ve' +
                             ' hit a CAPTCHA wall.' + $('.message_error').text());
                     }
                 } else {
-                    Utils.throwError('Failed to get t');
+                    rejectWithError(reject, `Failed to get skypetocken ${error} ${body} ${response.statusCode}`);
                 }
             });
         })
@@ -138,7 +143,8 @@ export class Login {
                     raw: registrationTokenHeader
                 });
                 if (!registrationTokenParams.registrationToken || !registrationTokenParams.expires || !registrationTokenParams.endpointId) {
-                    Utils.throwError('Failed to find registrationToken or expires or endpointId.');
+                    rejectWithError(reject, 'Failed to find registrationToken or expires or endpointId.');
+                    return;
                 }
                 registrationTokenParams.expires = parseInt(registrationTokenParams.expires);
 
@@ -148,7 +154,7 @@ export class Login {
                 resolve(skypeAccount)
 
             } else {
-                Utils.throwError('Failed to get registrationToken.' + error + JSON.stringify(response));
+                rejectWithError(reject, `Failed to get registrationToken. ${error} ${JSON.stringify(response)}`);
             }
         });
     }
@@ -175,7 +181,7 @@ export class Login {
             if (!error && response.statusCode === 201) {
                 resolve(skypeAccount);
             } else {
-                Utils.throwError('Failed to subscribe to resources.');
+                rejectWithError(reject, `Failed to subscribe to resources. ${error} ${response.statusCode}`);
             }
         });
     }
@@ -211,26 +217,28 @@ export class Login {
             if (!error && response.statusCode === 200) {
                 resolve(skypeAccount);
             } else {
-                Utils.throwError('Failed to create endpoint for status.' +
+                rejectWithError(reject, 'Failed to create endpoint for status.' +
                     '.\n Error code: ' + response.statusCode +
                     '.\n Error: ' + error +
-                    '.\n Body: ' + body
-                );
+                    '.\n Body: ' + body);
             }
         });
     }
 
-    private getSelfDisplayName(skypeAccout:SkypeAccount, resolve: any, reject: any) {
+    private getSelfDisplayName(skypeAccout: SkypeAccount, resolve: any, reject: any) {
         this.requestWithJar.get(Consts.SKYPEWEB_HTTPS + Consts.SKYPEWEB_API_SKYPE_HOST + Consts.SKYPEWEB_SELF_DISPLAYNAME_URL, {
             headers: {
                 'X-Skypetoken': skypeAccout.skypeToken
             }
-        }, function (error:any, response:http.IncomingMessage, body:any) {
+        }, function (error: any, response: http.IncomingMessage, body: any) {
             if (!error && response.statusCode == 200) {
                 skypeAccout.selfInfo = JSON.parse(body);
                 resolve(skypeAccout);
             } else {
-                Utils.throwError('Failed to get selfInfo.');
+                rejectWithError(reject, 'Failed to get selfInfo.' +
+                    '.\n Error code: ' + response.statusCode +
+                    '.\n Error: ' + error +
+                    '.\n Body: ' + body);
             }
         });
     }

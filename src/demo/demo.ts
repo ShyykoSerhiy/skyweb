@@ -13,6 +13,8 @@ skyweb.login(username, password).then((skypeAccount) => {
     console.log('Your contacts : ' + JSON.stringify(skyweb.contactsService.contacts, null, 2));
     console.log('Going incognito.');
     skyweb.setStatus('Hidden');
+}).catch((reason: string)=> {
+    console.log(reason);
 });
 skyweb.authRequestCallback = (requests) => {
     requests.forEach((request) => {
