@@ -18,4 +18,4 @@ declare class Skyweb {
     acceptAuthRequest(username: any): void;
     declineAuthRequest(username: any): void;
 }
-export default Skyweb;
+export = Skyweb;

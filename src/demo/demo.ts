@@ -1,4 +1,4 @@
-import Skyweb from '../skyweb';
+import Skyweb = require('../skyweb');
 
 var username = process.argv[2];
 var password = process.argv[3];

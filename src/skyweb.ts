@@ -68,4 +68,4 @@ class Skyweb {
     }
 }
 
-export default Skyweb;
+export = Skyweb;
