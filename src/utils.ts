@@ -7,7 +7,7 @@ export class Utils {
     }
 
     static getCurrentTime() {
-        return (new Date().getTime()) / 1000;
+        return Math.floor(new Date().getTime()) / 1000;
     }
 
     static getTimezone() {

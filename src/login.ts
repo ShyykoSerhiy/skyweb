@@ -10,13 +10,17 @@ import {Promise} from "es6-promise";
 
 export class Login {
     private requestWithJar: any;
+    private cookieJar: CookieJar;
 
     constructor(cookieJar:CookieJar) {
+        this.cookieJar = cookieJar;
         this.requestWithJar = request.defaults({jar: cookieJar});
     }
 
     public doLogin(skypeAccount:SkypeAccount) {
-        var functions = [new Promise(this.sendLoginRequest.bind(this, skypeAccount)), this.getRegistrationToken, this.subscribeToResources, this.createStatusEndpoint, this.getSelfDisplayName];
+        var functions = [new Promise<string>(this.sendLoginRequestOauth.bind(this, skypeAccount)).then((t) => {
+            return this.promiseSkypeToken(skypeAccount, t);
+        }), this.getRegistrationToken, this.subscribeToResources, this.createStatusEndpoint, this.getSelfDisplayName];
 
         return <Promise<{}>>(functions.reduce((previousValue:Promise<{}>, currentValue: any)=> {
             return previousValue.then((skypeAccount:SkypeAccount) => {
@@ -25,50 +29,75 @@ export class Login {
         }));
     }
 
-    private sendLoginRequest(skypeAccount:SkypeAccount, resolve: any, reject: any) {
-        this.requestWithJar.get(Consts.SKYPEWEB_LOGIN_URL, (error: Error, response: any, body: any) => {
+    private sendLoginRequestOauth(skypeAccount:SkypeAccount, resolve: any, reject: any) {
+        this.requestWithJar.get(Consts.SKYPEWEB_LOGIN_OAUTH_URL, (error: Error, response: any, body: any) => {
             if (!error && response.statusCode == 200) {
-                var $ = cheerio.load(body);
-
                 //we'll need those values to do successful auth
-                var pie = $('input[name="pie"]').val();
-                var etm = $('input[name="etm"]').val();
+                //sFTTag: '<input type="hidden" name="PPFT" id="i0327" value="somebiglongvalue"/>',
+                var ppft = /<input type="hidden" name="PPFT" id="i0327" value="([^"]+)"/g.exec(body)[1];
 
-                if (!pie || !etm) {
-                    Utils.throwError('Failed to find pie or etm.');
+                if (!ppft) {
+                    Utils.throwError('Failed to find ppft inside.');
                 }
 
                 var postParams = {
-                    url: Consts.SKYPEWEB_LOGIN_URL,
+                    url: Consts.SKYPEWEB_PPSECURE_OUTH_URL,
                     form: {
-                        username: skypeAccount.username,
-                        password: skypeAccount.password,
-                        pie: pie,
-                        etm: etm,
-                        timezone_field: Utils.getTimezone(),
-                        js_time: Utils.getCurrentTime()
+                        login: skypeAccount.username,
+                        passwd: skypeAccount.password,
+                        PPFT: ppft
                     }
                 };
+                this.cookieJar.setCookie(`CkTst=G${new Date().getTime()}`, Consts.SKYPEWEB_LOGIN_LIVE_COM);
                 //auth step
                 this.requestWithJar.post(postParams, (error: Error, response: any, body: any) => {
                     if (!error && response.statusCode == 200) {
                         var $ = cheerio.load(body);
-                        skypeAccount.skypeToken = $('input[name="skypetoken"]').val();
-                        skypeAccount.skypeTokenExpiresIn = parseInt($('input[name="expires_in"]').val());//86400 by default
-                        if (skypeAccount.skypeToken && skypeAccount.skypeTokenExpiresIn) {
-                            resolve(skypeAccount);
-                        } else {
-                            Utils.throwError('Failed to get skypetoken. Username or password is incorrect OR you\'ve' +
-                                ' hit a CAPTCHA wall.' + $('.message_error').text());
+                        //we need this magic t
+                        var t = $('input[name="t"]').val();
+                        if (!t) {
+                            Utils.throwError('Failed to find t inside.');
                         }
+
+                        resolve(t);
                     } else {
-                        Utils.throwError('Failed to get skypetoken');
+                        Utils.throwError('Failed to get t');
                     }
                 });
             } else {
                 Utils.throwError('Failed to get pie and etm. Login failed.');
             }
         });
+    }
+
+    private promiseSkypeToken(skypeAccount:SkypeAccount, magicT: string):Promise<SkypeAccount> {
+        return new Promise((resolve, reject) => {
+            var postParams = {
+                url: Consts.SKYPEWEB_LOGIN_MICROSOFT_URL,
+                form: {
+                    t: magicT, //*friendship* t is magic
+                    site_name: 'lw.skype.com',
+                    oauthPartner: 999,
+                    client_id: 578134,
+                    redirect_uri: 'https://web.skype.com'
+                }
+            };
+            this.requestWithJar.post(postParams, (error: Error, response: any, body: any) => {
+                if (!error && response.statusCode == 200) {
+                    var $ = cheerio.load(body);
+                    skypeAccount.skypeToken = $('input[name="skypetoken"]').val();
+                    skypeAccount.skypeTokenExpiresIn = parseInt($('input[name="expires_in"]').val());//86400 by default
+                    if (skypeAccount.skypeToken && skypeAccount.skypeTokenExpiresIn) {
+                        resolve(skypeAccount);
+                    } else {
+                        Utils.throwError('Failed to get skypetoken. Username or password is incorrect OR you\'ve' +
+                            ' hit a CAPTCHA wall.' + $('.message_error').text());
+                    }
+                } else {
+                    Utils.throwError('Failed to get t');
+                }
+            });
+        })
     }
 
     private getRegistrationToken(skypeAccount:SkypeAccount, resolve: any, reject: any) {

@@ -7,59 +7,86 @@ var url = require('url');
 var es6_promise_1 = require("es6-promise");
 var Login = (function () {
     function Login(cookieJar) {
+        this.cookieJar = cookieJar;
         this.requestWithJar = request.defaults({ jar: cookieJar });
     }
     Login.prototype.doLogin = function (skypeAccount) {
         var _this = this;
-        var functions = [new es6_promise_1.Promise(this.sendLoginRequest.bind(this, skypeAccount)), this.getRegistrationToken, this.subscribeToResources, this.createStatusEndpoint, this.getSelfDisplayName];
+        var functions = [new es6_promise_1.Promise(this.sendLoginRequestOauth.bind(this, skypeAccount)).then(function (t) {
+                return _this.promiseSkypeToken(skypeAccount, t);
+            }), this.getRegistrationToken, this.subscribeToResources, this.createStatusEndpoint, this.getSelfDisplayName];
         return (functions.reduce(function (previousValue, currentValue) {
             return previousValue.then(function (skypeAccount) {
                 return new es6_promise_1.Promise(currentValue.bind(_this, skypeAccount));
             });
         }));
     };
-    Login.prototype.sendLoginRequest = function (skypeAccount, resolve, reject) {
+    Login.prototype.sendLoginRequestOauth = function (skypeAccount, resolve, reject) {
         var _this = this;
-        this.requestWithJar.get(Consts.SKYPEWEB_LOGIN_URL, function (error, response, body) {
+        this.requestWithJar.get(Consts.SKYPEWEB_LOGIN_OAUTH_URL, function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                var $ = cheerio.load(body);
-                var pie = $('input[name="pie"]').val();
-                var etm = $('input[name="etm"]').val();
-                if (!pie || !etm) {
-                    utils_1.default.throwError('Failed to find pie or etm.');
+                var ppft = /<input type="hidden" name="PPFT" id="i0327" value="([^"]+)"/g.exec(body)[1];
+                if (!ppft) {
+                    utils_1.default.throwError('Failed to find ppft inside.');
                 }
                 var postParams = {
-                    url: Consts.SKYPEWEB_LOGIN_URL,
+                    url: Consts.SKYPEWEB_PPSECURE_OUTH_URL,
                     form: {
-                        username: skypeAccount.username,
-                        password: skypeAccount.password,
-                        pie: pie,
-                        etm: etm,
-                        timezone_field: utils_1.default.getTimezone(),
-                        js_time: utils_1.default.getCurrentTime()
+                        login: skypeAccount.username,
+                        passwd: skypeAccount.password,
+                        PPFT: ppft
                     }
                 };
+                _this.cookieJar.setCookie("CkTst=G" + new Date().getTime(), Consts.SKYPEWEB_LOGIN_LIVE_COM);
                 _this.requestWithJar.post(postParams, function (error, response, body) {
                     if (!error && response.statusCode == 200) {
                         var $ = cheerio.load(body);
-                        skypeAccount.skypeToken = $('input[name="skypetoken"]').val();
-                        skypeAccount.skypeTokenExpiresIn = parseInt($('input[name="expires_in"]').val());
-                        if (skypeAccount.skypeToken && skypeAccount.skypeTokenExpiresIn) {
-                            resolve(skypeAccount);
+                        var t = $('input[name="t"]').val();
+                        if (!t) {
+                            utils_1.default.throwError('Failed to find t inside.');
                         }
-                        else {
-                            utils_1.default.throwError('Failed to get skypetoken. Username or password is incorrect OR you\'ve' +
-                                ' hit a CAPTCHA wall.' + $('.message_error').text());
-                        }
+                        resolve(t);
                     }
                     else {
-                        utils_1.default.throwError('Failed to get skypetoken');
+                        utils_1.default.throwError('Failed to get t');
                     }
                 });
             }
             else {
                 utils_1.default.throwError('Failed to get pie and etm. Login failed.');
             }
+        });
+    };
+    Login.prototype.promiseSkypeToken = function (skypeAccount, magicT) {
+        var _this = this;
+        return new es6_promise_1.Promise(function (resolve, reject) {
+            var postParams = {
+                url: Consts.SKYPEWEB_LOGIN_MICROSOFT_URL,
+                form: {
+                    t: magicT,
+                    site_name: 'lw.skype.com',
+                    oauthPartner: 999,
+                    client_id: 578134,
+                    redirect_uri: 'https://web.skype.com'
+                }
+            };
+            _this.requestWithJar.post(postParams, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    var $ = cheerio.load(body);
+                    skypeAccount.skypeToken = $('input[name="skypetoken"]').val();
+                    skypeAccount.skypeTokenExpiresIn = parseInt($('input[name="expires_in"]').val());
+                    if (skypeAccount.skypeToken && skypeAccount.skypeTokenExpiresIn) {
+                        resolve(skypeAccount);
+                    }
+                    else {
+                        utils_1.default.throwError('Failed to get skypetoken. Username or password is incorrect OR you\'ve' +
+                            ' hit a CAPTCHA wall.' + $('.message_error').text());
+                    }
+                }
+                else {
+                    utils_1.default.throwError('Failed to get t');
+                }
+            });
         });
     };
     Login.prototype.getRegistrationToken = function (skypeAccount, resolve, reject) {

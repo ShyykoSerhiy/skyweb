@@ -50,8 +50,6 @@ var Skyweb = (function () {
     };
     return Skyweb;
 }());
-exports = Skyweb;
-exports.Skyweb = Skyweb;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Skyweb;
 //# sourceMappingURL=skyweb.js.map

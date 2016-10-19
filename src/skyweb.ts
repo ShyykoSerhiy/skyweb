@@ -1,4 +1,3 @@
-import * as poll from './polling/poll';
 import SkypeAccount from './skype_account';
 import ContactsService from './contacts_service';
 import * as request from 'request';
@@ -69,6 +68,4 @@ class Skyweb {
     }
 }
 
-exports = Skyweb;
-exports.Skyweb = Skyweb;
 export default Skyweb;

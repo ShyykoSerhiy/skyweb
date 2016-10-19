@@ -8,7 +8,7 @@ var Utils = (function () {
         console.error('Something went wrong!' + message);
     };
     Utils.getCurrentTime = function () {
-        return (new Date().getTime()) / 1000;
+        return Math.floor(new Date().getTime()) / 1000;
     };
     Utils.getTimezone = function () {
         var pad = function (n, c) {
