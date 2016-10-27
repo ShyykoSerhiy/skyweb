@@ -1,12 +1,15 @@
 {
   "compilerOptions": {
+    "declaration": true,
     "target": "ES5",
     "module": "commonjs",
     "outDir": "./dist",
     "sourceMap": true,
-    "removeComments": true
+    "removeComments": true,
+    "noImplicitAny" : true
   },
   "files": [
+    "typings/index.d.ts",
     "src/skyweb.ts",
     "src/login.ts",
     "src/skype_account.ts",
@@ -18,6 +21,7 @@
     "src/request_service.ts",
     "src/polling/auth_request.ts",
     "src/polling/poll.ts",
-    "src/demo/demo.ts"
+    "src/demo/demo.ts",
+    "manual_typings/js-sha256.ts"
   ]
 }

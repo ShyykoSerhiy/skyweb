@@ -1,13 +1,13 @@
-import Consts = require('./consts');
+import * as  Consts from "./consts";
 
-interface RegistrationTokenParams {
+export interface RegistrationTokenParams {
     raw: string;
     registrationToken:string;
     expires: number;
     endpointId: string;
 }
 
-interface SelfInfo {
+export interface SelfInfo {
     displayname: string;
     firstname: string;
     lastname: string;
@@ -15,7 +15,7 @@ interface SelfInfo {
     username: string
 }
 
-class SkypeAccount {
+export class SkypeAccount {
     private _username:string;
     private _password:string;
     private _skypeToken:string;
@@ -90,4 +90,4 @@ class SkypeAccount {
     }
 }
 
-export = SkypeAccount;
+export default SkypeAccount;

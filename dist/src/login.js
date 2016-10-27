@@ -1,50 +1,38 @@
-import * as request from 'request';
-import * as cheerio from 'cheerio';
-import Utils from './utils';
-import SkypeAccount from './skype_account';
-import * as Consts from './consts';
-import * as http from 'http';
-import * as url from 'url';
-import {CookieJar} from "request";
-import {Promise} from "es6-promise";
-
-const rejectWithError = (reject:(reason?:any)=>void, error: string) => {
-    Utils.throwError(error);
+"use strict";
+var request = require('request');
+var cheerio = require('cheerio');
+var utils_1 = require('./utils');
+var Consts = require('./consts');
+var url = require('url');
+var es6_promise_1 = require("es6-promise");
+var rejectWithError = function (reject, error) {
+    utils_1.default.throwError(error);
     reject(error);
 };
-
-export class Login {
-    private requestWithJar: any;
-    private cookieJar: CookieJar;
-
-    constructor(cookieJar:CookieJar) {
+var Login = (function () {
+    function Login(cookieJar) {
         this.cookieJar = cookieJar;
-        this.requestWithJar = request.defaults({jar: cookieJar});
+        this.requestWithJar = request.defaults({ jar: cookieJar });
     }
-
-    public doLogin(skypeAccount:SkypeAccount) {
-        var functions = [new Promise<string>(this.sendLoginRequestOauth.bind(this, skypeAccount)).then((t) => {
-            return this.promiseSkypeToken(skypeAccount, t);
-        }), this.getRegistrationToken, this.subscribeToResources, this.createStatusEndpoint, this.getSelfDisplayName];
-
-        return <Promise<{}>>(functions.reduce((previousValue:Promise<{}>, currentValue: any)=> {
-            return previousValue.then((skypeAccount:SkypeAccount) => {
-                return new Promise(currentValue.bind(this, skypeAccount));
+    Login.prototype.doLogin = function (skypeAccount) {
+        var _this = this;
+        var functions = [new es6_promise_1.Promise(this.sendLoginRequestOauth.bind(this, skypeAccount)).then(function (t) {
+                return _this.promiseSkypeToken(skypeAccount, t);
+            }), this.getRegistrationToken, this.subscribeToResources, this.createStatusEndpoint, this.getSelfDisplayName];
+        return (functions.reduce(function (previousValue, currentValue) {
+            return previousValue.then(function (skypeAccount) {
+                return new es6_promise_1.Promise(currentValue.bind(_this, skypeAccount));
             });
         }));
-    }
-
-    private sendLoginRequestOauth(skypeAccount:SkypeAccount, resolve: any, reject: any) {
-        this.requestWithJar.get(Consts.SKYPEWEB_LOGIN_OAUTH_URL, (error: Error, response: any, body: any) => {
+    };
+    Login.prototype.sendLoginRequestOauth = function (skypeAccount, resolve, reject) {
+        var _this = this;
+        this.requestWithJar.get(Consts.SKYPEWEB_LOGIN_OAUTH_URL, function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                //we'll need those values to do successful auth
-                //sFTTag: '<input type="hidden" name="PPFT" id="i0327" value="somebiglongvalue"/>',
                 var ppft = /<input type="hidden" name="PPFT" id="i0327" value="([^"]+)"/g.exec(body)[1];
-
                 if (!ppft) {
                     rejectWithError(reject, 'Failed to find ppft inside.');
                 }
-
                 var postParams = {
                     url: Consts.SKYPEWEB_PPSECURE_OUTH_URL,
                     form: {
@@ -53,86 +41,84 @@ export class Login {
                         PPFT: ppft
                     }
                 };
-                this.cookieJar.setCookie(`CkTst=G${new Date().getTime()}`, Consts.SKYPEWEB_LOGIN_LIVE_COM);
-                //auth step
-                this.requestWithJar.post(postParams, (error: Error, response: any, body: any) => {
+                _this.cookieJar.setCookie("CkTst=G" + new Date().getTime(), Consts.SKYPEWEB_LOGIN_LIVE_COM);
+                _this.requestWithJar.post(postParams, function (error, response, body) {
                     if (!error && response.statusCode == 200) {
                         var $ = cheerio.load(body);
-                        //we need this magic t
                         var t = $('input[name="t"]').val();
                         if (!t) {
                             rejectWithError(reject, 'Failed to find t inside.');
                         }
-
                         resolve(t);
-                    } else {
+                    }
+                    else {
                         rejectWithError(reject, 'Failed to get t');
                     }
                 });
-            } else {
+            }
+            else {
                 rejectWithError(reject, 'Failed while trying to get ppft');
             }
         });
-    }
-
-    private promiseSkypeToken(skypeAccount:SkypeAccount, magicT: string):Promise<SkypeAccount> {
-        return new Promise((resolve, reject) => {
+    };
+    Login.prototype.promiseSkypeToken = function (skypeAccount, magicT) {
+        var _this = this;
+        return new es6_promise_1.Promise(function (resolve, reject) {
             var postParams = {
                 url: Consts.SKYPEWEB_LOGIN_MICROSOFT_URL,
                 form: {
-                    t: magicT, //*friendship* t is magic
+                    t: magicT,
                     site_name: 'lw.skype.com',
                     oauthPartner: 999,
                     client_id: 578134,
                     redirect_uri: 'https://web.skype.com'
                 }
             };
-            this.requestWithJar.post(postParams, (error: Error, response: any, body: any) => {
+            _this.requestWithJar.post(postParams, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     var $ = cheerio.load(body);
                     skypeAccount.skypeToken = $('input[name="skypetoken"]').val();
-                    skypeAccount.skypeTokenExpiresIn = parseInt($('input[name="expires_in"]').val());//86400 by default
+                    skypeAccount.skypeTokenExpiresIn = parseInt($('input[name="expires_in"]').val());
                     if (skypeAccount.skypeToken && skypeAccount.skypeTokenExpiresIn) {
                         resolve(skypeAccount);
-                    } else {
+                    }
+                    else {
                         rejectWithError(reject, 'Failed to get skypetoken. Username or password is incorrect OR you\'ve' +
                             ' hit a CAPTCHA wall.' + $('.message_error').text());
                     }
-                } else {
-                    rejectWithError(reject, `Failed to get skypetocken ${error} ${body} ${response.statusCode}`);
+                }
+                else {
+                    rejectWithError(reject, "Failed to get skypetocken " + error + " " + body + " " + response.statusCode);
                 }
             });
-        })
-    }
-
-    private getRegistrationToken(skypeAccount:SkypeAccount, resolve: any, reject: any) {
-        var currentTime = Utils.getCurrentTime();
-        var lockAndKeyResponse = Utils.getMac256Hash(currentTime, Consts.SKYPEWEB_LOCKANDKEY_APPID, Consts.SKYPEWEB_LOCKANDKEY_SECRET);
+        });
+    };
+    Login.prototype.getRegistrationToken = function (skypeAccount, resolve, reject) {
+        var _this = this;
+        var currentTime = utils_1.default.getCurrentTime();
+        var lockAndKeyResponse = utils_1.default.getMac256Hash(currentTime, Consts.SKYPEWEB_LOCKANDKEY_APPID, Consts.SKYPEWEB_LOCKANDKEY_SECRET);
         this.requestWithJar.post(Consts.SKYPEWEB_HTTPS + skypeAccount.messagesHost + '/v1/users/ME/endpoints', {
             headers: {
                 'LockAndKey': 'appId=' + Consts.SKYPEWEB_LOCKANDKEY_APPID + '; time=' + currentTime + '; lockAndKeyResponse=' + lockAndKeyResponse,
                 'ClientInfo': 'os=Windows; osVer=10; proc=Win64; lcid=en-us; deviceType=1; country=n/a; clientName=' + Consts.SKYPEWEB_CLIENTINFO_NAME + '; clientVer=' + Consts.SKYPEWEB_CLIENTINFO_VERSION,
                 'Authentication': 'skypetoken=' + skypeAccount.skypeToken
             },
-            body: '{}' //don't ask why
-        }, (error:any, response:http.IncomingMessage, body:any) => {
-            //now lets try retrieve registration token
+            body: '{}'
+        }, function (error, response, body) {
             if (!error && response.statusCode === 201 || response.statusCode === 301) {
                 var locationHeader = response.headers['location'];
-                //expecting something like this 'registrationToken=someSting; expires=someNumber; endpointId={someString}'
                 var registrationTokenHeader = response.headers['set-registrationtoken'];
                 var location = url.parse(locationHeader);
-                if (location.host !== skypeAccount.messagesHost) { //mainly when 301, but sometimes when 201
+                if (location.host !== skypeAccount.messagesHost) {
                     skypeAccount.messagesHost = location.host;
-                    //looks like messagesHost has changed?
-                    this.getRegistrationToken(skypeAccount, resolve, reject);
+                    _this.getRegistrationToken(skypeAccount, resolve, reject);
                     return;
                 }
-
-                var registrationTokenParams = registrationTokenHeader.split(/\s*;\s*/).reduce((params: any, current:string) => {
+                var registrationTokenParams = registrationTokenHeader.split(/\s*;\s*/).reduce(function (params, current) {
                     if (current.indexOf('registrationToken') === 0) {
                         params['registrationToken'] = current;
-                    } else {
+                    }
+                    else {
                         var index = current.indexOf('=');
                         if (index > 0) {
                             params[current.substring(0, index)] = current.substring(index + 1);
@@ -147,19 +133,15 @@ export class Login {
                     return;
                 }
                 registrationTokenParams.expires = parseInt(registrationTokenParams.expires);
-
                 skypeAccount.registrationTokenParams = registrationTokenParams;
-
-                //fixme add endpoint and expires!
-                resolve(skypeAccount)
-
-            } else {
-                rejectWithError(reject, `Failed to get registrationToken. ${error} ${JSON.stringify(response)}`);
+                resolve(skypeAccount);
+            }
+            else {
+                rejectWithError(reject, "Failed to get registrationToken. " + error + " " + JSON.stringify(response));
             }
         });
-    }
-
-    private subscribeToResources(skypeAccount:SkypeAccount, resolve: any, reject: any) {
+    };
+    Login.prototype.subscribeToResources = function (skypeAccount, resolve, reject) {
         var interestedResources = [
             '/v1/threads/ALL',
             '/v1/users/ME/contacts/ALL',
@@ -169,35 +151,32 @@ export class Login {
         var requestBody = JSON.stringify({
             interestedResources: interestedResources,
             template: 'raw',
-            channelType: 'httpLongPoll'//todo web sockets maybe ?
+            channelType: 'httpLongPoll'
         });
-
         this.requestWithJar.post(Consts.SKYPEWEB_HTTPS + skypeAccount.messagesHost + '/v1/users/ME/endpoints/SELF/subscriptions', {
             body: requestBody,
             headers: {
                 'RegistrationToken': skypeAccount.registrationTokenParams.raw
             }
-        }, (error:any, response:http.IncomingMessage, body:any) => {
+        }, function (error, response, body) {
             if (!error && response.statusCode === 201) {
                 resolve(skypeAccount);
-            } else {
-                rejectWithError(reject, `Failed to subscribe to resources. ${error} ${response.statusCode}`);
+            }
+            else {
+                rejectWithError(reject, "Failed to subscribe to resources. " + error + " " + response.statusCode);
             }
         });
-    }
-
-    private createStatusEndpoint(skypeAccount:SkypeAccount, resolve: any, reject: any) {
-        if (!skypeAccount.registrationTokenParams.endpointId){
-            //there is no need in this case to create endpoint?
+    };
+    Login.prototype.createStatusEndpoint = function (skypeAccount, resolve, reject) {
+        if (!skypeAccount.registrationTokenParams.endpointId) {
             resolve(skypeAccount);
             return;
         }
-        //a little bit more of skype madness
-        var requestBody = JSON.stringify({ //this is exact json that is needed to register endpoint for setting of status.
+        var requestBody = JSON.stringify({
             "id": "messagingService",
             "type": "EndpointPresenceDoc",
             "selfLink": "uri",
-            "privateInfo": {"epname": "skype"},
+            "privateInfo": { "epname": "skype" },
             "publicInfo": {
                 "capabilities": "video|audio",
                 "type": 1,
@@ -206,42 +185,45 @@ export class Login {
                 "version": Consts.SKYPEWEB_CLIENTINFO_VERSION + '//' + Consts.SKYPEWEB_CLIENTINFO_NAME
             }
         });
-
         this.requestWithJar.put(Consts.SKYPEWEB_HTTPS + skypeAccount.messagesHost +
             '/v1/users/ME/endpoints/' + skypeAccount.registrationTokenParams.endpointId + '/presenceDocs/messagingService', {
             body: requestBody,
             headers: {
                 'RegistrationToken': skypeAccount.registrationTokenParams.raw
             }
-        }, (error:any, response:http.IncomingMessage, body:any) => {
+        }, function (error, response, body) {
             if (!error && response.statusCode === 200) {
                 resolve(skypeAccount);
-            } else {
+            }
+            else {
                 rejectWithError(reject, 'Failed to create endpoint for status.' +
                     '.\n Error code: ' + response.statusCode +
                     '.\n Error: ' + error +
                     '.\n Body: ' + body);
             }
         });
-    }
-
-    private getSelfDisplayName(skypeAccout: SkypeAccount, resolve: any, reject: any) {
+    };
+    Login.prototype.getSelfDisplayName = function (skypeAccout, resolve, reject) {
         this.requestWithJar.get(Consts.SKYPEWEB_HTTPS + Consts.SKYPEWEB_API_SKYPE_HOST + Consts.SKYPEWEB_SELF_DISPLAYNAME_URL, {
             headers: {
                 'X-Skypetoken': skypeAccout.skypeToken
             }
-        }, function (error: any, response: http.IncomingMessage, body: any) {
+        }, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 skypeAccout.selfInfo = JSON.parse(body);
                 resolve(skypeAccout);
-            } else {
+            }
+            else {
                 rejectWithError(reject, 'Failed to get selfInfo.' +
                     '.\n Error code: ' + response.statusCode +
                     '.\n Error: ' + error +
                     '.\n Body: ' + body);
             }
         });
-    }
-}
-
-export default Login;
+    };
+    return Login;
+}());
+exports.Login = Login;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = Login;
+//# sourceMappingURL=login.js.map
