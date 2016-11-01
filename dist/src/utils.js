@@ -5,7 +5,8 @@ var Utils = (function () {
     function Utils() {
     }
     Utils.throwError = function (message) {
-        console.error('Something went wrong!' + message);
+        console.error('Something went really wrong! Closing program. ' + message);
+        throw message;
     };
     Utils.getCurrentTime = function () {
         return Math.floor(new Date().getTime()) / 1000;
