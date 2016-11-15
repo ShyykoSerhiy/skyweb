@@ -1,5 +1,6 @@
 import SkypeAccount from './skype_account';
 import ContactsService from './contacts_service';
+import ThreadService from "./thread_service";
 import Status from "./status/status";
 import { Promise } from "es6-promise";
 declare class Skyweb {
@@ -10,6 +11,7 @@ declare class Skyweb {
     private messageService;
     private requestService;
     private statusService;
+    threadService: ThreadService;
     private cookieJar;
     constructor();
     login(username: any, password: any): Promise<{}>;
@@ -17,5 +19,6 @@ declare class Skyweb {
     setStatus(status: Status): void;
     acceptAuthRequest(username: any): void;
     declineAuthRequest(username: any): void;
+    createThread(members?: any): Promise<any>;
 }
 export = Skyweb;
