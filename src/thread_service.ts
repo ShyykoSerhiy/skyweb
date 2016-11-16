@@ -7,7 +7,13 @@ import {CookieJar} from "request";
 import {Promise} from "es6-promise";
 
 export interface Member{
+    /**
+     * Member id in format 8:tomriddle9154 if old skype account and 8:live:tomriddle9154 if live account
+     */
     id: string,
+    /**
+     * Role for this user in group. Note that you should probably add at least one 'Admin' to the group.
+     */
     role: 'User' | 'Admin'
 }
 
@@ -17,13 +23,16 @@ export class ThreadService {
     constructor(cookieJar:CookieJar) {
         this.requestWithJar = request.defaults({jar: cookieJar});
     }
-
+    /**
+     * Creates thread (skype group) with provided members. You should include yourself as an Admin.
+     * @return promise with thread id in format 19:0fe2w7d11fa649g99036e3sv39a52721@thread.skype 
+     */
     create(skypeAccount:SkypeAccount, members:Member[]) : Promise<string> {
         var promise = new Promise<string>( (resolve,reject) => {
             var requestBody = JSON.stringify({                
                 'members': members || []
             });
-            
+
             this.requestWithJar.post(Consts.SKYPEWEB_HTTPS + skypeAccount.messagesHost + '/v1/threads', {
                 body: requestBody,
                 headers: {
