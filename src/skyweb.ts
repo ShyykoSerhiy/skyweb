@@ -8,8 +8,10 @@ import MessageService from "./message_service";
 import StatusService from "./status_service";
 import AuthRequest from "./polling/auth_request";
 import RequestService from "./request_service";
+import ThreadService from "./thread_service";
 import Status from "./status/status";
 import {Promise} from "es6-promise";
+import {Member} from "./thread_service";
 
 class Skyweb {
     public messagesCallback:(messages:Array<any>)=>void;
@@ -19,6 +21,7 @@ class Skyweb {
     private messageService:MessageService;
     private requestService:RequestService;
     private statusService:StatusService;
+    public threadService:ThreadService;
     /**
      * CookieJar that is used for this Skyweb instance
      */
@@ -30,6 +33,8 @@ class Skyweb {
         this.messageService = new MessageService(this.cookieJar);
         this.requestService = new RequestService(this.cookieJar);
         this.statusService = new StatusService(this.cookieJar);
+        this.requestService = new RequestService(this.cookieJar);
+        this.threadService = new ThreadService(this.cookieJar);
     }
 
     login(username: any, password: any):Promise<{}> {
@@ -65,6 +70,10 @@ class Skyweb {
 
     declineAuthRequest(username: any) {
         return this.requestService.decline(this.skypeAccount, username);
+    }
+
+    createThread(members: Member[]): Promise<string> {
+        return this.threadService.create(this.skypeAccount, members);
     }
 }
 

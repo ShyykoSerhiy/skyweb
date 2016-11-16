@@ -41,6 +41,15 @@ skyweb.login(username, password).then((skypeAccount) => {
 ```
 Currently supported values are : "Hidden" | "Online" | "Away" | "Busy"
 
+###Creating thread(Skype group)
+```js
+var skyweb = new Skyweb();
+skyweb.login(username, password).then((skypeAccount) => {
+    skyweb.createThread([{"id":"8:someuserid","role":"User"},{"id":"8:live:someliveuserid","role":"User"},{"id":"8:youruserid","role":"Admin"}]);
+});
+```
+It's probably a good idea to include at least one user with Admin role in new thread(at least you should have Admin role).  
+
 ##What's not working and probably never will.
 * [Old P2P group chats](https://github.com/ShyykoSerhiy/skyweb/issues/6). According to  [Skype community site ](http://community.skype.com/t5/Skype-for-Web-Beta/Group-chats-missing-on-skype-web/td-p/3884218) only new, Cloud based group chats are shown in SkypeWeb Beta(therefore works in this API). The old P2P group chats are not.  
 
