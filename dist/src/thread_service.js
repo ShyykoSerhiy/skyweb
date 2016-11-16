@@ -23,7 +23,7 @@ var ThreadService = (function () {
                     resolve(threadID);
                 }
                 else {
-                    reject('Failed to send message.' +
+                    reject('Failed to create thread.' +
                         '.\n Error code: ' + response.statusCode +
                         '.\n Error: ' + error +
                         '.\n Body: ' + body);

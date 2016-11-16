@@ -3,6 +3,7 @@ import ContactsService from './contacts_service';
 import ThreadService from "./thread_service";
 import Status from "./status/status";
 import { Promise } from "es6-promise";
+import { Member } from "./thread_service";
 declare class Skyweb {
     messagesCallback: (messages: Array<any>) => void;
     authRequestCallback: (messages: Array<any>) => void;
@@ -19,6 +20,6 @@ declare class Skyweb {
     setStatus(status: Status): void;
     acceptAuthRequest(username: any): void;
     declineAuthRequest(username: any): void;
-    createThread(members?: any): Promise<any>;
+    createThread(members: Member[]): Promise<string>;
 }
 export = Skyweb;
