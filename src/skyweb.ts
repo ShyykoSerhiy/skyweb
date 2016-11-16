@@ -11,6 +11,7 @@ import RequestService from "./request_service";
 import ThreadService from "./thread_service";
 import Status from "./status/status";
 import {Promise} from "es6-promise";
+import {Member} from "./thread_service";
 
 class Skyweb {
     public messagesCallback:(messages:Array<any>)=>void;
@@ -71,7 +72,7 @@ class Skyweb {
         return this.requestService.decline(this.skypeAccount, username);
     }
 
-    createThread(members?: any): Promise<any> {
+    createThread(members: Member[]): Promise<string> {
         return this.threadService.create(this.skypeAccount, members);
     }
 }

@@ -6,6 +6,11 @@ import * as http from 'http';
 import {CookieJar} from "request";
 import {Promise} from "es6-promise";
 
+export interface Member{
+    id: string,
+    role: 'User' | 'Admin'
+}
+
 export class ThreadService {
     private requestWithJar: any;
 
@@ -13,16 +18,12 @@ export class ThreadService {
         this.requestWithJar = request.defaults({jar: cookieJar});
     }
 
-    create(skypeAccount:SkypeAccount, members?:any) : Promise<any> {
-
+    create(skypeAccount:SkypeAccount, members:Member[]) : Promise<string> {
         var promise = new Promise<string>( (resolve,reject) => {
-
-            var requestBody = JSON.stringify({
-                ///'clientmessageid': Utils.getCurrentTime() + '', //fixme looks like we don't need this?(at least if we don't want to
-                // have the ability to modify text(content) of the message.)
+            var requestBody = JSON.stringify({                
                 'members': members || []
             });
-
+            
             this.requestWithJar.post(Consts.SKYPEWEB_HTTPS + skypeAccount.messagesHost + '/v1/threads', {
                 body: requestBody,
                 headers: {
@@ -33,7 +34,7 @@ export class ThreadService {
                     var threadID = /threads\/(.*@thread.skype)/.exec( response.headers.location )[1];
                     resolve(threadID);
                 } else {
-                    reject('Failed to send message.' +
+                    reject('Failed to create thread.' +
                         '.\n Error code: ' + response.statusCode +
                         '.\n Error: ' + error +
                         '.\n Body: ' + body
