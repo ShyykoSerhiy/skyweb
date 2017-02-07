@@ -3,7 +3,7 @@ import * as bigInt from "big-integer";
 
 export class Utils {
     static throwError(message: any) {
-        console.error('Something went really wrong! Closing program. ' + message); //FIXME
+        console.error('Something went really wrong! Closing program. ' + message);
         throw message;
     }
 
