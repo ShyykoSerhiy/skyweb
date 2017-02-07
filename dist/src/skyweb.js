@@ -8,6 +8,7 @@ var message_service_1 = require("./message_service");
 var status_service_1 = require("./status_service");
 var auth_request_1 = require("./polling/auth_request");
 var request_service_1 = require("./request_service");
+var thread_service_1 = require("./thread_service");
 var es6_promise_1 = require("es6-promise");
 var Skyweb = (function () {
     function Skyweb() {
@@ -16,6 +17,8 @@ var Skyweb = (function () {
         this.messageService = new message_service_1.default(this.cookieJar);
         this.requestService = new request_service_1.default(this.cookieJar);
         this.statusService = new status_service_1.default(this.cookieJar);
+        this.requestService = new request_service_1.default(this.cookieJar);
+        this.threadService = new thread_service_1.default(this.cookieJar);
     }
     Skyweb.prototype.login = function (username, password) {
         var _this = this;
@@ -47,6 +50,9 @@ var Skyweb = (function () {
     };
     Skyweb.prototype.declineAuthRequest = function (username) {
         return this.requestService.decline(this.skypeAccount, username);
+    };
+    Skyweb.prototype.createThread = function (members) {
+        return this.threadService.create(this.skypeAccount, members);
     };
     return Skyweb;
 }());
