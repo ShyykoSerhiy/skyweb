@@ -24,6 +24,25 @@ skyweb.login(username, password).then(function (skypeAccount) {
 });
 ```
 
+###Keeping track of errors
+
+Because the whole lib is quite volatile it's may be a good idea to keep track of errors that might
+ occur while requests being made. This is the place where you might try to relogin or to terminate the process.
+
+```js
+Skyweb = require('skyweb');
+var skyweb = new Skyweb();
+const errorListener = (eventName: string, error: string) => {
+    console.log(`${errorCount} : Error occured : ${error}`);
+    errorCount++;
+    if (errorCount === 10) {
+        console.log(`Removing error listener`);
+        skyweb.un('error', errorListener); // Removing error listener
+    }
+};
+skyweb.on('error', errorListener); //Adding error listener
+```
+
 ###Getting contacts info
 ```js
 var skyweb = new Skyweb();
