@@ -1,10 +1,11 @@
 "use strict";
-var request = require('request');
-var Consts = require('./consts');
+var request = require("request");
+var Consts = require("./consts");
 var es6_promise_1 = require("es6-promise");
 var ThreadService = (function () {
-    function ThreadService(cookieJar) {
+    function ThreadService(cookieJar, eventEmitter) {
         this.requestWithJar = request.defaults({ jar: cookieJar });
+        this.eventEmitter = eventEmitter;
     }
     ThreadService.prototype.create = function (skypeAccount, members) {
         var _this = this;

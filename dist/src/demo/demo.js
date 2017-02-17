@@ -1,5 +1,5 @@
 "use strict";
-var Skyweb = require('../skyweb');
+var Skyweb = require("../skyweb");
 var username = process.argv[2];
 var password = process.argv[3];
 if (!username || !password) {
@@ -15,12 +15,6 @@ skyweb.login(username, password).then(function (skypeAccount) {
 }).catch(function (reason) {
     console.log(reason);
 });
-skyweb.authRequestCallback = function (requests) {
-    requests.forEach(function (request) {
-        skyweb.acceptAuthRequest(request.sender);
-        skyweb.sendMessage("8:" + request.sender, "I accepted you!");
-    });
-};
 skyweb.messagesCallback = function (messages) {
     messages.forEach(function (message) {
         if (message.resource.from.indexOf(username) === -1 && message.resource.messagetype !== 'Control/Typing' && message.resource.messagetype !== 'Control/ClearTyping') {
@@ -30,4 +24,14 @@ skyweb.messagesCallback = function (messages) {
         }
     });
 };
+var errorCount = 0;
+var errorListener = function (eventName, error) {
+    console.log(errorCount + " : Error occured : " + error);
+    errorCount++;
+    if (errorCount === 10) {
+        console.log("Removing error listener");
+        skyweb.un('error', errorListener);
+    }
+};
+skyweb.on('error', errorListener);
 //# sourceMappingURL=demo.js.map

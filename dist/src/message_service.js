@@ -1,12 +1,13 @@
 "use strict";
-var request = require('request');
-var Consts = require('./consts');
-var utils_1 = require('./utils');
+var request = require("request");
+var Consts = require("./consts");
 var MessageService = (function () {
-    function MessageService(cookieJar) {
+    function MessageService(cookieJar, eventEmitter) {
         this.requestWithJar = request.defaults({ jar: cookieJar });
+        this.eventEmitter = eventEmitter;
     }
     MessageService.prototype.sendMessage = function (skypeAccount, conversationId, message, messagetype, contenttype) {
+        var _this = this;
         var requestBody = JSON.stringify({
             'content': message,
             'messagetype': messagetype || 'RichText',
@@ -21,7 +22,7 @@ var MessageService = (function () {
             if (!error && response.statusCode === 201) {
             }
             else {
-                utils_1.default.throwError('Failed to send message.' +
+                _this.eventEmitter.fire('error', 'Failed to send message.' +
                     '.\n Error code: ' + response.statusCode +
                     '.\n Error: ' + error +
                     '.\n Body: ' + body);

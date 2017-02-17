@@ -5,12 +5,14 @@ import Utils from "./../utils";
 import * as http from 'http';
 import {CookieJar} from "request";
 import {Login} from "../login";
+import {EventEmitter} from "../utils";
 
 export class Poll {
     private requestWithJar: any;
     private cookieJar:CookieJar;
+    private eventEmitter: EventEmitter;
 
-    constructor(cookieJar:CookieJar) {
+    constructor(cookieJar:CookieJar, eventEmitter: EventEmitter) {
         this.requestWithJar = request.defaults({jar: cookieJar});
         this.cookieJar = cookieJar;
     }
@@ -27,11 +29,11 @@ export class Poll {
                 } else if (body && body.errorCode === 729) {
                     // statusCode: 404.
                     // body: {"errorCode":729,"message":"You must create an endpoint before performing this operation."}
-                    new Login(this.cookieJar).doLogin(skypeAccount)
+                    new Login(this.cookieJar, this.eventEmitter).doLogin(skypeAccount)
                         .then(this.pollAll.bind(this, skypeAccount, messagesCallback));
                     return;
                 } else {
-                    Utils.throwError('Failed to poll messages.' +
+                    this.eventEmitter.fire('error', 'Failed to poll messages.' +
                         '.\n Error code: ' + (response && response.statusCode ? response.statusCode : 'none') +
                         '.\n Error: ' + error +
                         '.\n Body: ' + body

@@ -1,10 +1,9 @@
 "use strict";
-var request = require('request');
-var Consts = require('./../consts');
-var utils_1 = require("./../utils");
+var request = require("request");
+var Consts = require("./../consts");
 var login_1 = require("../login");
 var Poll = (function () {
-    function Poll(cookieJar) {
+    function Poll(cookieJar, eventEmitter) {
         this.requestWithJar = request.defaults({ jar: cookieJar });
         this.cookieJar = cookieJar;
     }
@@ -20,12 +19,12 @@ var Poll = (function () {
                     Poll.parsePollResult(JSON.parse(body), messagesCallback);
                 }
                 else if (body && body.errorCode === 729) {
-                    new login_1.Login(_this.cookieJar).doLogin(skypeAccount)
+                    new login_1.Login(_this.cookieJar, _this.eventEmitter).doLogin(skypeAccount)
                         .then(_this.pollAll.bind(_this, skypeAccount, messagesCallback));
                     return;
                 }
                 else {
-                    utils_1.default.throwError('Failed to poll messages.' +
+                    _this.eventEmitter.fire('error', 'Failed to poll messages.' +
                         '.\n Error code: ' + (response && response.statusCode ? response.statusCode : 'none') +
                         '.\n Error: ' + error +
                         '.\n Body: ' + body);

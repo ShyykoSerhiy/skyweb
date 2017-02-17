@@ -1,18 +1,19 @@
 "use strict";
-var request = require('request');
-var cheerio = require('cheerio');
-var utils_1 = require('./utils');
-var Consts = require('./consts');
-var url = require('url');
+var request = require("request");
+var cheerio = require("cheerio");
+var utils_1 = require("./utils");
+var Consts = require("./consts");
+var url = require("url");
 var es6_promise_1 = require("es6-promise");
-var rejectWithError = function (reject, error) {
-    utils_1.default.throwError(error);
+var rejectWithError = function (reject, error, eventEmitter) {
+    eventEmitter.fire('error', error);
     reject(error);
 };
 var Login = (function () {
-    function Login(cookieJar) {
+    function Login(cookieJar, eventEmitter) {
         this.cookieJar = cookieJar;
         this.requestWithJar = request.defaults({ jar: cookieJar });
+        this.eventEmitter = eventEmitter;
     }
     Login.prototype.doLogin = function (skypeAccount) {
         var _this = this;
@@ -31,7 +32,7 @@ var Login = (function () {
             if (!error && response.statusCode == 200) {
                 var ppft = /<input type="hidden" name="PPFT" id="i0327" value="([^"]+)"/g.exec(body)[1];
                 if (!ppft) {
-                    rejectWithError(reject, 'Failed to find ppft inside.');
+                    rejectWithError(reject, 'Failed to find ppft inside.', _this.eventEmitter);
                 }
                 var postParams = {
                     url: Consts.SKYPEWEB_PPSECURE_OUTH_URL,
@@ -47,17 +48,17 @@ var Login = (function () {
                         var $ = cheerio.load(body);
                         var t = $('input[name="t"]').val();
                         if (!t) {
-                            rejectWithError(reject, 'Failed to find t inside.');
+                            rejectWithError(reject, 'Failed to find t inside.', _this.eventEmitter);
                         }
                         resolve(t);
                     }
                     else {
-                        rejectWithError(reject, 'Failed to get t');
+                        rejectWithError(reject, 'Failed to get t', _this.eventEmitter);
                     }
                 });
             }
             else {
-                rejectWithError(reject, 'Failed while trying to get ppft');
+                rejectWithError(reject, 'Failed while trying to get ppft', _this.eventEmitter);
             }
         });
     };
@@ -84,11 +85,11 @@ var Login = (function () {
                     }
                     else {
                         rejectWithError(reject, 'Failed to get skypetoken. Username or password is incorrect OR you\'ve' +
-                            ' hit a CAPTCHA wall.' + $('.message_error').text());
+                            ' hit a CAPTCHA wall.' + $('.message_error').text(), _this.eventEmitter);
                     }
                 }
                 else {
-                    rejectWithError(reject, "Failed to get skypetocken " + error + " " + body + " " + response.statusCode);
+                    rejectWithError(reject, "Failed to get skypetocken " + error + " " + body + " " + response.statusCode, _this.eventEmitter);
                 }
             });
         });
@@ -129,7 +130,7 @@ var Login = (function () {
                     raw: registrationTokenHeader
                 });
                 if (!registrationTokenParams.registrationToken || !registrationTokenParams.expires || !registrationTokenParams.endpointId) {
-                    rejectWithError(reject, 'Failed to find registrationToken or expires or endpointId.');
+                    rejectWithError(reject, 'Failed to find registrationToken or expires or endpointId.', _this.eventEmitter);
                     return;
                 }
                 registrationTokenParams.expires = parseInt(registrationTokenParams.expires);
@@ -137,11 +138,12 @@ var Login = (function () {
                 resolve(skypeAccount);
             }
             else {
-                rejectWithError(reject, "Failed to get registrationToken. " + error + " " + JSON.stringify(response));
+                rejectWithError(reject, "Failed to get registrationToken. " + error + " " + JSON.stringify(response), _this.eventEmitter);
             }
         });
     };
     Login.prototype.subscribeToResources = function (skypeAccount, resolve, reject) {
+        var _this = this;
         var interestedResources = [
             '/v1/threads/ALL',
             '/v1/users/ME/contacts/ALL',
@@ -163,11 +165,12 @@ var Login = (function () {
                 resolve(skypeAccount);
             }
             else {
-                rejectWithError(reject, "Failed to subscribe to resources. " + error + " " + response.statusCode);
+                rejectWithError(reject, "Failed to subscribe to resources. " + error + " " + response.statusCode, _this.eventEmitter);
             }
         });
     };
     Login.prototype.createStatusEndpoint = function (skypeAccount, resolve, reject) {
+        var _this = this;
         if (!skypeAccount.registrationTokenParams.endpointId) {
             resolve(skypeAccount);
             return;
@@ -199,7 +202,7 @@ var Login = (function () {
                 rejectWithError(reject, 'Failed to create endpoint for status.' +
                     '.\n Error code: ' + response.statusCode +
                     '.\n Error: ' + error +
-                    '.\n Body: ' + body);
+                    '.\n Body: ' + body, _this.eventEmitter);
             }
         });
     };
@@ -217,7 +220,7 @@ var Login = (function () {
                 rejectWithError(reject, 'Failed to get selfInfo.' +
                     '.\n Error code: ' + response.statusCode +
                     '.\n Error: ' + error +
-                    '.\n Body: ' + body);
+                    '.\n Body: ' + body, this.eventEmitter);
             }
         });
     };

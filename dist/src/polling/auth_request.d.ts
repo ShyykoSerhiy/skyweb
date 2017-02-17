@@ -1,7 +1,9 @@
 import { CookieJar } from "request";
+import { EventEmitter } from "../utils";
 export declare class AuthRequest {
     private requestWithJar;
-    constructor(cookieJar: CookieJar);
-    pollAll: (skypeAccount: any, messagesCallback: any) => void;
+    private eventEmitter;
+    constructor(cookieJar: CookieJar, eventEmitter: EventEmitter);
+    pollAll(skypeAccount: any, messagesCallback: any): void;
 }
 export default AuthRequest;

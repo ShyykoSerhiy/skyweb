@@ -1,13 +1,36 @@
 "use strict";
 var sha256 = require("js-sha256");
 var bigInt = require("big-integer");
+var EventEmitter = (function () {
+    function EventEmitter() {
+        this._eventListeners = { 'error': [] };
+    }
+    EventEmitter.prototype.on = function (eventName, listener) {
+        var listeners = this._eventListeners[eventName];
+        if (typeof listeners === 'undefined') {
+            listeners = [];
+            this._eventListeners[eventName] = listeners;
+        }
+        listeners.push(listener);
+    };
+    EventEmitter.prototype.un = function (eventName, listener) {
+        var listeners = this._eventListeners[eventName];
+        if (!listeners) {
+            return;
+        }
+        var index = listeners.indexOf(listener);
+        ~index && listeners.splice(index, 1);
+        !listeners.length && delete this._eventListeners[eventName];
+    };
+    EventEmitter.prototype.fire = function (eventName, content) {
+        this._eventListeners[eventName] && this._eventListeners[eventName].forEach(function (listener) { listener(eventName, content); });
+    };
+    return EventEmitter;
+}());
+exports.EventEmitter = EventEmitter;
 var Utils = (function () {
     function Utils() {
     }
-    Utils.throwError = function (message) {
-        console.error('Something went really wrong! Closing program. ' + message);
-        throw message;
-    };
     Utils.getCurrentTime = function () {
         return Math.floor(new Date().getTime()) / 1000;
     };

@@ -4,13 +4,16 @@ import SkypeAccount from './skype_account';
 import Utils from './utils';
 import * as http from 'http';
 import {CookieJar} from "request";
+import {EventEmitter} from "./utils";
 
 export class ContactsService {
     public contacts:Array<{}>;
     private requestWithJar: any;
+    private eventEmitter: EventEmitter;
 
-    constructor(cookieJar:CookieJar) {
+    constructor(cookieJar:CookieJar, eventEmitter: EventEmitter) {
         this.requestWithJar = request.defaults({jar: cookieJar});
+        this.eventEmitter = eventEmitter;
     }
 
     public loadContacts(skypeAccount:SkypeAccount, resolve:(skypeAccount:SkypeAccount, contacts:Array<{}>)=>{}, reject: any):void {
@@ -23,7 +26,7 @@ export class ContactsService {
                 this.contacts = JSON.parse(body).contacts;
                 resolve(skypeAccount, this.contacts);
             } else {
-                Utils.throwError('Failed to load contacts.');
+                this.eventEmitter.fire('error', 'Failed to load contacts.');
             }
         });
     }

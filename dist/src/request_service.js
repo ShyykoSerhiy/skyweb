@@ -1,12 +1,13 @@
 "use strict";
-var request = require('request');
-var Consts = require('./consts');
-var utils_1 = require('./utils');
+var request = require("request");
+var Consts = require("./consts");
 var RequestService = (function () {
-    function RequestService(cookieJar) {
+    function RequestService(cookieJar, eventEmitter) {
         this.requestWithJar = request.defaults({ jar: cookieJar });
+        this.eventEmitter = eventEmitter;
     }
     RequestService.prototype.accept = function (skypeAccount, userName) {
+        var _this = this;
         this.requestWithJar.put(Consts.SKYPEWEB_HTTPS + Consts.SKYPEWEB_API_SKYPE_HOST + '/users/self/contacts/auth-request/' + userName + '/accept', {
             headers: {
                 'X-Skypetoken': skypeAccount.skypeToken
@@ -16,11 +17,12 @@ var RequestService = (function () {
                 return JSON.parse(body);
             }
             else {
-                utils_1.default.throwError('Failed to accept friend.' + error + "/" + JSON.stringify(response));
+                _this.eventEmitter.fire('error', 'Failed to accept friend.' + error + "/" + JSON.stringify(response));
             }
         });
     };
     RequestService.prototype.decline = function (skypeAccount, userName) {
+        var _this = this;
         this.requestWithJar.put(Consts.SKYPEWEB_HTTPS + Consts.SKYPEWEB_API_SKYPE_HOST + '/users/self/contacts/auth-request/' + userName + '/decline', {
             headers: {
                 'X-Skypetoken': skypeAccount.skypeToken
@@ -30,7 +32,7 @@ var RequestService = (function () {
                 return JSON.parse(body);
             }
             else {
-                utils_1.default.throwError('Failed to decline friend.' + error + "/" + JSON.stringify(response));
+                _this.eventEmitter.fire('error', 'Failed to decline friend.' + error + "/" + JSON.stringify(response));
             }
         });
     };
