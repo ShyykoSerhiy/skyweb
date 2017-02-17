@@ -5,12 +5,15 @@ import Utils from './utils';
 import * as http from 'http';
 import {CookieJar} from "request";
 import Status from "./status/status";
+import {EventEmitter} from "./utils";
 
 export class StatusService {
     private requestWithJar: any;
+    private eventEmitter: EventEmitter;
 
-    constructor(cookieJar:CookieJar) {
+    constructor(cookieJar:CookieJar, eventEmitter: EventEmitter) {
         this.requestWithJar = request.defaults({jar: cookieJar});
+        this.eventEmitter = eventEmitter;
     }
 
     public setStatus(skypeAccount:SkypeAccount, status: Status) {
@@ -26,11 +29,10 @@ export class StatusService {
             if (!error && response.statusCode === 200) {
                 //fixme? send success callback?
             } else {
-                Utils.throwError('Failed to change status' +
+                this.eventEmitter.fire('error', 'Failed to change status' +
                     '.\n Error code: ' + response.statusCode +
                     '.\n Error: ' + error +
-                    '.\n Body: ' + body
-                );
+                    '.\n Body: ' + body);                
             }
         });
     }

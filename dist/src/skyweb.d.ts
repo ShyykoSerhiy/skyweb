@@ -6,12 +6,12 @@ import { Promise } from "es6-promise";
 import { Member } from "./thread_service";
 declare class Skyweb {
     messagesCallback: (messages: Array<any>) => void;
-    authRequestCallback: (messages: Array<any>) => void;
     skypeAccount: SkypeAccount;
     contactsService: ContactsService;
     private messageService;
     private requestService;
     private statusService;
+    private eventEmitter;
     threadService: ThreadService;
     private cookieJar;
     constructor();
@@ -21,5 +21,7 @@ declare class Skyweb {
     acceptAuthRequest(username: any): void;
     declineAuthRequest(username: any): void;
     createThread(members: Member[]): Promise<string>;
+    on(eventName: string, listener: (eventName: string, content: any) => void): void;
+    un(eventName: string, listener: (eventName: string, content: any) => void): void;
 }
 export = Skyweb;

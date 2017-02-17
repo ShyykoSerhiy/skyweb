@@ -1,12 +1,13 @@
 "use strict";
-var request = require('request');
-var Consts = require('./consts');
-var utils_1 = require('./utils');
+var request = require("request");
+var Consts = require("./consts");
 var StatusService = (function () {
-    function StatusService(cookieJar) {
+    function StatusService(cookieJar, eventEmitter) {
         this.requestWithJar = request.defaults({ jar: cookieJar });
+        this.eventEmitter = eventEmitter;
     }
     StatusService.prototype.setStatus = function (skypeAccount, status) {
+        var _this = this;
         var requestBody = JSON.stringify({
             status: status
         });
@@ -19,7 +20,7 @@ var StatusService = (function () {
             if (!error && response.statusCode === 200) {
             }
             else {
-                utils_1.default.throwError('Failed to change status' +
+                _this.eventEmitter.fire('error', 'Failed to change status' +
                     '.\n Error code: ' + response.statusCode +
                     '.\n Error: ' + error +
                     '.\n Body: ' + body);

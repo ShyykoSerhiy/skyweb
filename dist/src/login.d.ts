@@ -1,10 +1,12 @@
 import SkypeAccount from './skype_account';
 import { CookieJar } from "request";
 import { Promise } from "es6-promise";
+import { EventEmitter } from "./utils";
 export declare class Login {
     private requestWithJar;
     private cookieJar;
-    constructor(cookieJar: CookieJar);
+    private eventEmitter;
+    constructor(cookieJar: CookieJar, eventEmitter: EventEmitter);
     doLogin(skypeAccount: SkypeAccount): Promise<{}>;
     private sendLoginRequestOauth(skypeAccount, resolve, reject);
     private promiseSkypeToken(skypeAccount, magicT);

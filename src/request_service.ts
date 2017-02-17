@@ -4,12 +4,15 @@ import SkypeAccount from './skype_account';
 import Utils from './utils';
 import * as http from 'http';
 import {CookieJar} from "request";
+import {EventEmitter} from "./utils";
 
 export class RequestService {
     private requestWithJar: any;
+    private eventEmitter: EventEmitter;
 
-    constructor(cookieJar:CookieJar) {
+    constructor(cookieJar:CookieJar, eventEmitter: EventEmitter) {
         this.requestWithJar = request.defaults({jar: cookieJar});
+        this.eventEmitter = eventEmitter;
     }
 
     accept(skypeAccount: any, userName: any) {
@@ -21,7 +24,7 @@ export class RequestService {
             if (!error && response.statusCode === 201) {
                 return JSON.parse(body);
             } else {
-                Utils.throwError('Failed to accept friend.' + error + "/" + JSON.stringify(response));
+                this.eventEmitter.fire('error', 'Failed to accept friend.' + error + "/" + JSON.stringify(response));
             }
         });
     }
@@ -35,7 +38,7 @@ export class RequestService {
             if (!error && response.statusCode === 201) {
                 return JSON.parse(body);
             } else {
-                Utils.throwError('Failed to decline friend.' + error + "/" + JSON.stringify(response));
+                this.eventEmitter.fire('error', 'Failed to decline friend.' + error + "/" + JSON.stringify(response));
             }
         });
     }

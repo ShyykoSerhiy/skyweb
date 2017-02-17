@@ -5,6 +5,7 @@ import Utils from './utils';
 import * as http from 'http';
 import {CookieJar} from "request";
 import {Promise} from "es6-promise";
+import {EventEmitter} from "./utils";
 
 export interface Member{
     /**
@@ -19,9 +20,11 @@ export interface Member{
 
 export class ThreadService {
     private requestWithJar: any;
+    private eventEmitter: EventEmitter;
 
-    constructor(cookieJar:CookieJar) {
+    constructor(cookieJar:CookieJar, eventEmitter: EventEmitter) {
         this.requestWithJar = request.defaults({jar: cookieJar});
+        this.eventEmitter = eventEmitter;
     }
     /**
      * Creates thread (skype group) with provided members. You should include yourself as an Admin.

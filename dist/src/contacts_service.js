@@ -1,10 +1,10 @@
 "use strict";
-var request = require('request');
-var Consts = require('./consts');
-var utils_1 = require('./utils');
+var request = require("request");
+var Consts = require("./consts");
 var ContactsService = (function () {
-    function ContactsService(cookieJar) {
+    function ContactsService(cookieJar, eventEmitter) {
         this.requestWithJar = request.defaults({ jar: cookieJar });
+        this.eventEmitter = eventEmitter;
     }
     ContactsService.prototype.loadContacts = function (skypeAccount, resolve, reject) {
         var _this = this;
@@ -18,7 +18,7 @@ var ContactsService = (function () {
                 resolve(skypeAccount, _this.contacts);
             }
             else {
-                utils_1.default.throwError('Failed to load contacts.');
+                _this.eventEmitter.fire('error', 'Failed to load contacts.');
             }
         });
     };

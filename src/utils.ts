@@ -1,11 +1,41 @@
 import * as sha256 from "js-sha256";
 import * as bigInt from "big-integer";
 
-export class Utils {
-    static throwError(message: any) {
-        console.error('Something went wrong!' + message); //FIXME
+export class EventEmitter {
+    private _eventListeners: {
+        'error': ((error: 'error', reason: string) => void)[],
+        [key: string]: ((eventName: string, data: any) => void)[];
+    };
+
+    public constructor() {
+        this._eventListeners = { 'error': [] };
     }
 
+    public on(eventName: string, listener: (eventName: string, content: any) => void) {
+        let listeners = this._eventListeners[eventName];
+        if (typeof listeners === 'undefined') {
+            listeners = [];
+            this._eventListeners[eventName] = listeners;
+        }
+        listeners.push(listener);
+    }
+
+    public un(eventName: string, listener: (eventName: string, content: any) => void) {
+        let listeners = this._eventListeners[eventName];
+        if (!listeners){
+            return;
+        }
+        const index = listeners.indexOf(listener);
+        ~index && listeners.splice(index, 1);        
+        !listeners.length && delete this._eventListeners[eventName];
+    }
+
+    public fire(eventName: string, content: any) {
+        this._eventListeners[eventName] && this._eventListeners[eventName].forEach((listener) => { listener(eventName, content) });
+    }
+}
+
+export class Utils {
     static getCurrentTime() {
         return Math.floor(new Date().getTime()) / 1000;
     }
@@ -52,7 +82,7 @@ export class Utils {
             return original.valueOf();
         }
 
-        function parseHexInt(s:string):number {
+        function parseHexInt(s: string): number {
             var result = parseInt(s, 16);
             if (isNaN(result)) {
                 return 0;
@@ -60,7 +90,7 @@ export class Utils {
             return result;
         }
 
-        function int32ToHexString(n:number):string {
+        function int32ToHexString(n: number): string {
             var hexChars = '0123456789abcdef';
             var hexString = '';
             for (var i = 0; i <= 3; i++) {
@@ -71,7 +101,7 @@ export class Utils {
             return hexString;
         }
 
-        function int64Xor(a:number, b:number):number {
+        function int64Xor(a: number, b: number): number {
             var sA = a.toString(2);
             var sB = b.toString(2);
             var sC = '';
@@ -99,7 +129,7 @@ export class Utils {
             return parseInt(sC.toString(), 2);
         }
 
-        function cS64_C(pdwData:Array<string>, pInHash:Array<number>, pOutHash:Array<Number>):boolean {
+        function cS64_C(pdwData: Array<string>, pInHash: Array<number>, pOutHash: Array<Number>): boolean {
             var MODULUS = 2147483647;
             if ((pdwData.length < 2) || ((pdwData.length & 1) === 1)) {
                 return false;
@@ -168,7 +198,7 @@ export class Utils {
         }
 
         var sha256Hash = new Array(4);
-        var hash:string = sha256.sha256(challenge + key).toUpperCase();
+        var hash: string = sha256.sha256(challenge + key).toUpperCase();
         for (i = 0, pos = 0; i < sha256Hash.length; i++) {
             sha256Hash[i] = 0;
             sha256Hash[i] += parseHexInt(hash.substr(pos, 2)) * 1;

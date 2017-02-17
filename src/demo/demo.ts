@@ -13,17 +13,23 @@ skyweb.login(username, password).then((skypeAccount) => {
     console.log('Your contacts : ' + JSON.stringify(skyweb.contactsService.contacts, null, 2));
     console.log('Going incognito.');
     skyweb.setStatus('Hidden');
-}).catch((reason: string)=> {
+}).catch((reason: string) => {
     console.log(reason);
 });
+/*
+
+authRequestCallback was removed because Skype web has moved to websockets for authRequests.
+
 skyweb.authRequestCallback = (requests) => {
     requests.forEach((request) => {
         skyweb.acceptAuthRequest(request.sender);
         skyweb.sendMessage("8:" + request.sender, "I accepted you!");
     });
 };
+
+*/
 skyweb.messagesCallback = (messages) => {
-    messages.forEach((message)=> {
+    messages.forEach((message) => {
         if (message.resource.from.indexOf(username) === -1 && message.resource.messagetype !== 'Control/Typing' && message.resource.messagetype !== 'Control/ClearTyping') {
             var conversationLink = message.resource.conversationLink;
             var conversationId = conversationLink.substring(conversationLink.lastIndexOf('/') + 1);
@@ -31,3 +37,15 @@ skyweb.messagesCallback = (messages) => {
         }
     });
 };
+
+//error listening demo
+let errorCount = 0;
+const errorListener = (eventName: string, error: string) => {
+    console.log(`${errorCount} : Error occured : ${error}`);
+    errorCount++;
+    if (errorCount === 10) {
+        console.log(`Removing error listener`);
+        skyweb.un('error', errorListener);
+    }
+};
+skyweb.on('error', errorListener);
