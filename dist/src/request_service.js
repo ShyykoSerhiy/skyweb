@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var request = require("request");
 var Consts = require("./consts");
 var RequestService = (function () {
@@ -39,6 +40,5 @@ var RequestService = (function () {
     return RequestService;
 }());
 exports.RequestService = RequestService;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = RequestService;
 //# sourceMappingURL=request_service.js.map

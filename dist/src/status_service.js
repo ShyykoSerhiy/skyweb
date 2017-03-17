@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var request = require("request");
 var Consts = require("./consts");
 var StatusService = (function () {
@@ -30,6 +31,5 @@ var StatusService = (function () {
     return StatusService;
 }());
 exports.StatusService = StatusService;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = StatusService;
 //# sourceMappingURL=status_service.js.map

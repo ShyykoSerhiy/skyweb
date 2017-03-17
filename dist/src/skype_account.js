@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var Consts = require("./consts");
 var SkypeAccount = (function () {
     function SkypeAccount(username, password) {
@@ -79,6 +80,5 @@ var SkypeAccount = (function () {
     return SkypeAccount;
 }());
 exports.SkypeAccount = SkypeAccount;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = SkypeAccount;
 //# sourceMappingURL=skype_account.js.map

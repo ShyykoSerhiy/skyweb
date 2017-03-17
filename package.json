@@ -8,6 +8,9 @@
     "type": "git",
     "url": "git://github.com/ShyykoSerhiy/skyweb.git"
   },
+  "scripts": {
+    "prepublish": "tsc"
+  },
   "keywords": [
     "Skype"
   ],

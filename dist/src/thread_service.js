@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var request = require("request");
 var Consts = require("./consts");
 var es6_promise_1 = require("es6-promise");
@@ -36,6 +37,5 @@ var ThreadService = (function () {
     return ThreadService;
 }());
 exports.ThreadService = ThreadService;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ThreadService;
 //# sourceMappingURL=thread_service.js.map

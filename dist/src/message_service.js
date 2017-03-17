@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var request = require("request");
 var Consts = require("./consts");
 var MessageService = (function () {
@@ -32,6 +33,5 @@ var MessageService = (function () {
     return MessageService;
 }());
 exports.MessageService = MessageService;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = MessageService;
 //# sourceMappingURL=message_service.js.map

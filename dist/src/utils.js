@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var sha256 = require("js-sha256");
 var bigInt = require("big-integer");
 var EventEmitter = (function () {
@@ -195,6 +196,5 @@ var Utils = (function () {
     return Utils;
 }());
 exports.Utils = Utils;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Utils;
 //# sourceMappingURL=utils.js.map

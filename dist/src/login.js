@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var request = require("request");
 var cheerio = require("cheerio");
 var utils_1 = require("./utils");
@@ -227,6 +228,5 @@ var Login = (function () {
     return Login;
 }());
 exports.Login = Login;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Login;
 //# sourceMappingURL=login.js.map

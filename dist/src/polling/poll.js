@@ -1,10 +1,12 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var request = require("request");
 var Consts = require("./../consts");
 var login_1 = require("../login");
 var Poll = (function () {
     function Poll(cookieJar, eventEmitter) {
         this.requestWithJar = request.defaults({ jar: cookieJar });
+        this.eventEmitter = eventEmitter;
         this.cookieJar = cookieJar;
     }
     Poll.prototype.pollAll = function (skypeAccount, messagesCallback) {
@@ -46,6 +48,5 @@ var Poll = (function () {
     return Poll;
 }());
 exports.Poll = Poll;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Poll;
 //# sourceMappingURL=poll.js.map

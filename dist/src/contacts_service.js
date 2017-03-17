@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var request = require("request");
 var Consts = require("./consts");
 var ContactsService = (function () {
@@ -25,6 +26,5 @@ var ContactsService = (function () {
     return ContactsService;
 }());
 exports.ContactsService = ContactsService;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ContactsService;
 //# sourceMappingURL=contacts_service.js.map

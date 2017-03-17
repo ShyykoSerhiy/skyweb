@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var request = require("request");
 var Consts = require("./../consts");
 var AuthRequest = (function () {
@@ -27,6 +28,5 @@ var AuthRequest = (function () {
     return AuthRequest;
 }());
 exports.AuthRequest = AuthRequest;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = AuthRequest;
 //# sourceMappingURL=auth_request.js.map
