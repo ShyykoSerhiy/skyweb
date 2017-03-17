@@ -14,6 +14,7 @@ export class Poll {
 
     constructor(cookieJar:CookieJar, eventEmitter: EventEmitter) {
         this.requestWithJar = request.defaults({jar: cookieJar});
+        this.eventEmitter = eventEmitter;
         this.cookieJar = cookieJar;
     }
 
