@@ -105,7 +105,7 @@ var Login = (function () {
                 'ClientInfo': 'os=Windows; osVer=10; proc=Win64; lcid=en-us; deviceType=1; country=n/a; clientName=' + Consts.SKYPEWEB_CLIENTINFO_NAME + '; clientVer=' + Consts.SKYPEWEB_CLIENTINFO_VERSION,
                 'Authentication': 'skypetoken=' + skypeAccount.skypeToken
             },
-            body: '{}'
+            body: JSON.stringify({ endpointFeatures: "Agent" })
         }, function (error, response, body) {
             if (!error && response.statusCode === 201 || response.statusCode === 301) {
                 var locationHeader = response.headers['location'];

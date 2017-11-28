@@ -117,7 +117,7 @@ export class Login {
                 'ClientInfo': 'os=Windows; osVer=10; proc=Win64; lcid=en-us; deviceType=1; country=n/a; clientName=' + Consts.SKYPEWEB_CLIENTINFO_NAME + '; clientVer=' + Consts.SKYPEWEB_CLIENTINFO_VERSION,
                 'Authentication': 'skypetoken=' + skypeAccount.skypeToken
             },
-            body: '{}' //don't ask why
+            body: JSON.stringify({ endpointFeatures: "Agent" }) //this means *war* that this client can work with bots (aka agents).
         }, (error:any, response:http.IncomingMessage, body:any) => {
             //now lets try retrieve registration token
             if (!error && response.statusCode === 201 || response.statusCode === 301) {
