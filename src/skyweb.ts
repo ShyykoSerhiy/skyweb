@@ -56,7 +56,10 @@ class Skyweb {
     sendMessage(conversationId: string, message: string, messagetype?: string, contenttype?: string) {
         this.messageService.sendMessage(this.skypeAccount, conversationId, message, messagetype, contenttype);
     }
-
+	
+	setTopic(conversationId: string, message: string) {
+		this.messageService.setTopic(this.skypeAccount, conversationId, message);
+    }
     setStatus(status: Status) {
         this.statusService.setStatus(this.skypeAccount, status);
     }
