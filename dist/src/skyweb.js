@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var skype_account_1 = require("./skype_account");
 var contacts_service_1 = require("./contacts_service");
 var request = require("request");
@@ -38,6 +39,9 @@ var Skyweb = (function () {
     Skyweb.prototype.sendMessage = function (conversationId, message, messagetype, contenttype) {
         this.messageService.sendMessage(this.skypeAccount, conversationId, message, messagetype, contenttype);
     };
+    Skyweb.prototype.setTopic = function (conversationId, message) {
+        this.messageService.setTopic(this.skypeAccount, conversationId, message);
+    };
     Skyweb.prototype.setStatus = function (status) {
         this.statusService.setStatus(this.skypeAccount, status);
     };
@@ -58,5 +62,5 @@ var Skyweb = (function () {
     };
     return Skyweb;
 }());
-module.exports = Skyweb;
+exports.default = Skyweb;
 //# sourceMappingURL=skyweb.js.map

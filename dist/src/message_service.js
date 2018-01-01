@@ -30,6 +30,27 @@ var MessageService = (function () {
             }
         });
     };
+    MessageService.prototype.setTopic = function (skypeAccount, conversationId, message) {
+        var _this = this;
+        var requestBody = JSON.stringify({
+            'topic': message
+        });
+        this.requestWithJar.put(Consts.SKYPEWEB_HTTPS + skypeAccount.messagesHost + '/v1/threads/' + conversationId + '/properties?name=topic', {
+            body: requestBody,
+            headers: {
+                'RegistrationToken': skypeAccount.registrationTokenParams.raw
+            }
+        }, function (error, response, body) {
+            if (!error && response.statusCode === 201) {
+            }
+            else {
+                _this.eventEmitter.fire('error', 'Failed to send message.' +
+                    '.\n Error code: ' + response.statusCode +
+                    '.\n Error: ' + error +
+                    '.\n Body: ' + body);
+            }
+        });
+    };
     return MessageService;
 }());
 exports.MessageService = MessageService;

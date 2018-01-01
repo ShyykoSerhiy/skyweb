@@ -4,7 +4,7 @@ import ThreadService from "./thread_service";
 import Status from "./status/status";
 import { Promise } from "es6-promise";
 import { Member } from "./thread_service";
-declare class Skyweb {
+export default class Skyweb {
     messagesCallback: (messages: Array<any>) => void;
     skypeAccount: SkypeAccount;
     contactsService: ContactsService;
@@ -17,6 +17,7 @@ declare class Skyweb {
     constructor();
     login(username: any, password: any): Promise<{}>;
     sendMessage(conversationId: string, message: string, messagetype?: string, contenttype?: string): void;
+    setTopic(conversationId: string, message: string): void;
     setStatus(status: Status): void;
     acceptAuthRequest(username: any): void;
     declineAuthRequest(username: any): void;
@@ -24,4 +25,3 @@ declare class Skyweb {
     on(eventName: string, listener: (eventName: string, content: any) => void): void;
     un(eventName: string, listener: (eventName: string, content: any) => void): void;
 }
-export = Skyweb;

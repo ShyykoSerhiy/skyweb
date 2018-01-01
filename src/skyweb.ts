@@ -14,7 +14,7 @@ import { Promise } from "es6-promise";
 import { Member } from "./thread_service";
 import { EventEmitter } from "./utils";
 
-class Skyweb {
+export default class Skyweb {
     public messagesCallback: (messages: Array<any>) => void;
     public skypeAccount: SkypeAccount;
     public contactsService: ContactsService;
@@ -84,5 +84,3 @@ class Skyweb {
         this.eventEmitter.un(eventName, listener);
     }
 }
-
-export = Skyweb;
