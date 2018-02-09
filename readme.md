@@ -18,7 +18,7 @@ After 'Skyweb is initialized now' appears in console any message you receive in 
 ### Initializing and login
 ```js
 Skyweb = require('skyweb');
-var skyweb = new Skyweb();
+var skyweb = new Skyweb.default();
 skyweb.login(username, password).then(function (skypeAccount) {
     console.log('Skyweb is initialized now');
 });
@@ -31,7 +31,7 @@ Because the whole lib is quite volatile it's may be a good idea to keep track of
 
 ```js
 Skyweb = require('skyweb');
-var skyweb = new Skyweb();
+var skyweb = new Skyweb.default();
 const errorListener = (eventName: string, error: string) => {
     console.log(`${errorCount} : Error occured : ${error}`);
     errorCount++;
@@ -45,7 +45,7 @@ skyweb.on('error', errorListener); //Adding error listener
 
 ### Getting contacts info
 ```js
-var skyweb = new Skyweb();
+var skyweb = new Skyweb.default();
 skyweb.login(username, password).then((skypeAccount) => {    
     console.log('Your contacts : ' + JSON.stringify(skyweb.contactsService.contacts, null, 2));
 });
@@ -53,7 +53,7 @@ skyweb.login(username, password).then((skypeAccount) => {
 
 ### Setting status
 ```js
-var skyweb = new Skyweb();
+var skyweb = new Skyweb.default();
 skyweb.login(username, password).then((skypeAccount) => {
     skyweb.setStatus('Hidden'); //Now everybody thinks I'm sleeping
 });
@@ -62,7 +62,7 @@ Currently supported values are : "Hidden" | "Online" | "Away" | "Busy"
 
 ### Creating thread(Skype group)
 ```js
-var skyweb = new Skyweb();
+var skyweb = new Skyweb.default();
 skyweb.login(username, password).then((skypeAccount) => {
     skyweb.createThread([{"id":"8:someuserid","role":"User"},{"id":"8:live:someliveuserid","role":"User"},{"id":"8:youruserid","role":"Admin"}]);
 });
