@@ -1,3 +1,4 @@
+/// <reference types="request" />
 import SkypeAccount from './skype_account';
 import { CookieJar } from "request";
 import { EventEmitter } from "./utils";

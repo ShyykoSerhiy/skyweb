@@ -30,11 +30,11 @@ export class Login {
             return this.promiseSkypeToken(skypeAccount, t);
         }), this.getRegistrationToken, this.subscribeToResources, this.createStatusEndpoint, this.getSelfDisplayName];
 
-        return <Promise<{}>>(functions.reduce((previousValue:Promise<{}>, currentValue: any)=> {
-            return previousValue.then((skypeAccount:SkypeAccount) => {
+        return <Promise<{}>>(functions.reduce((previousValue: Promise<any>, currentValue: any) => {
+            return previousValue.then((skypeAccount: SkypeAccount) => {
                 return new Promise(currentValue.bind(this, skypeAccount));
             });
-        }));
+        }, Promise.resolve()));
     }
 
     private sendLoginRequestOauth(skypeAccount:SkypeAccount, resolve: any, reject: any) {
@@ -132,7 +132,7 @@ export class Login {
                     return;
                 }
 
-                var registrationTokenParams = registrationTokenHeader.split(/\s*;\s*/).reduce((params: any, current:string) => {
+                var registrationTokenParams = (registrationTokenHeader as string).split(/\s*;\s*/).reduce((params: any, current:string) => {
                     if (current.indexOf('registrationToken') === 0) {
                         params['registrationToken'] = current;
                     } else {

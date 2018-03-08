@@ -1,3 +1,4 @@
+/// <reference types="request" />
 import { CookieJar } from "request";
 import { EventEmitter } from "../utils";
 export declare class AuthRequest {

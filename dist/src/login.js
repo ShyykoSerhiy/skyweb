@@ -25,7 +25,7 @@ var Login = (function () {
             return previousValue.then(function (skypeAccount) {
                 return new es6_promise_1.Promise(currentValue.bind(_this, skypeAccount));
             });
-        }));
+        }, es6_promise_1.Promise.resolve()));
     };
     Login.prototype.sendLoginRequestOauth = function (skypeAccount, resolve, reject) {
         var _this = this;
