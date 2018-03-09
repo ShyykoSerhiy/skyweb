@@ -25,7 +25,7 @@ export class Login {
         this.eventEmitter = eventEmitter;
     }
 
-    public doLogin(skypeAccount:SkypeAccount) {
+    public doLogin(skypeAccount: SkypeAccount) {
         var functions = [new Promise<string>(this.sendLoginRequestOauth.bind(this, skypeAccount)).then((t) => {
             return this.promiseSkypeToken(skypeAccount, t);
         }), this.getRegistrationToken, this.subscribeToResources, this.createStatusEndpoint, this.getSelfDisplayName];
@@ -34,7 +34,7 @@ export class Login {
             return previousValue.then((skypeAccount: SkypeAccount) => {
                 return new Promise(currentValue.bind(this, skypeAccount));
             });
-        }, Promise.resolve()));
+        }));
     }
 
     private sendLoginRequestOauth(skypeAccount:SkypeAccount, resolve: any, reject: any) {
