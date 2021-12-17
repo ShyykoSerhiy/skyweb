@@ -20,12 +20,19 @@ export declare class SkypeAccount {
     private _registrationTokenParams;
     private _selfInfo;
     constructor(username: string, password: string);
-    username: string;
-    password: string;
-    skypeToken: string;
-    skypeTokenExpiresIn: number;
-    messagesHost: string;
-    registrationTokenParams: RegistrationTokenParams;
-    selfInfo: SelfInfo;
+    set username(username: string);
+    get username(): string;
+    set password(password: string);
+    get password(): string;
+    set skypeToken(skypeToken: string);
+    get skypeToken(): string;
+    set skypeTokenExpiresIn(skypeTokenExpiresIn: number);
+    get skypeTokenExpiresIn(): number;
+    set messagesHost(messagesHost: string);
+    get messagesHost(): string;
+    set registrationTokenParams(registrationTokenParams: RegistrationTokenParams);
+    get registrationTokenParams(): RegistrationTokenParams;
+    set selfInfo(selfInfo: SelfInfo);
+    get selfInfo(): SelfInfo;
 }
 export default SkypeAccount;
