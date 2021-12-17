@@ -1,4 +1,3 @@
-/// <reference types="request" />
 import SkypeAccount from './skype_account';
 import { CookieJar } from "request";
 import Status from "./status/status";

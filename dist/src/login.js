@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Login = void 0;
 var request = require("request");
 var cheerio = require("cheerio");
 var utils_1 = require("./utils");
@@ -40,18 +41,29 @@ var Login = (function () {
                     form: {
                         login: skypeAccount.username,
                         passwd: skypeAccount.password,
-                        PPFT: ppft
+                        PPFT: ppft,
+                        opid: ''
                     }
                 };
                 _this.cookieJar.setCookie("CkTst=G" + new Date().getTime(), Consts.SKYPEWEB_LOGIN_LIVE_COM);
                 _this.requestWithJar.post(postParams, function (error, response, body) {
                     if (!error && response.statusCode == 200) {
-                        var $ = cheerio.load(body);
-                        var t = $('input[name="t"]').val();
-                        if (!t) {
-                            rejectWithError(reject, 'Failed to find t inside.', _this.eventEmitter);
+                        var opid = /opid=([A-Z0-9]+)/g.exec(body)[1];
+                        if (!opid) {
+                            return rejectWithError(reject, 'Failed to get opid', _this.eventEmitter);
                         }
-                        resolve(t);
+                        postParams.form['opid'] = opid;
+                        _this.requestWithJar.post(postParams, function (error, response, body) {
+                            if (error || !response || !body) {
+                                return rejectWithError(reject, 'Failed to find t inside.', this.eventEmitter);
+                            }
+                            var $ = cheerio.load(body);
+                            var t = $('input[name="t"]').val();
+                            if (!t) {
+                                rejectWithError(reject, 'Failed to find t inside.', this.eventEmitter);
+                            }
+                            resolve(t);
+                        });
                     }
                     else {
                         rejectWithError(reject, 'Failed to get t', _this.eventEmitter);

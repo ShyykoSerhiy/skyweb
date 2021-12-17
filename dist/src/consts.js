@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SKYPEWEB_SELF_DISPLAYNAME_URL = exports.SKYPEWEB_PPSECURE_OUTH_URL = exports.SKYPEWEB_LOGIN_MICROSOFT_URL = exports.SKYPEWEB_LOGIN_OAUTH_URL = exports.SKYPEWEB_DEFAULT_MESSAGES_HOST = exports.SKYPEWEB_CONTACTS_HOST = exports.SKYPEWEB_API_SKYPE_HOST = exports.SKYPEWEB_CLIENTINFO_VERSION = exports.SKYPEWEB_CLIENTINFO_NAME = exports.SKYPEWEB_LOCKANDKEY_SECRET = exports.SKYPEWEB_LOCKANDKEY_APPID = exports.SKYPEWEB_LOGIN_LIVE_COM = exports.SKYPEWEB_HTTPS = void 0;
 exports.SKYPEWEB_HTTPS = 'https://';
 exports.SKYPEWEB_LOGIN_LIVE_COM = 'https://login.live.com/';
 exports.SKYPEWEB_LOCKANDKEY_APPID = 'msmsgs@msnmsgr.com';

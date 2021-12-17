@@ -53,21 +53,31 @@ export class Login {
                     form: {
                         login: skypeAccount.username,
                         passwd: skypeAccount.password,
-                        PPFT: ppft
+                        PPFT: ppft,
+                        opid: ''
                     }
                 };
                 this.cookieJar.setCookie(`CkTst=G${new Date().getTime()}`, Consts.SKYPEWEB_LOGIN_LIVE_COM);
                 //auth step
                 this.requestWithJar.post(postParams, (error: Error, response: any, body: any) => {
                     if (!error && response.statusCode == 200) {
-                        var $ = cheerio.load(body);
-                        //we need this magic t
-                        var t = $('input[name="t"]').val();
-                        if (!t) {
-                            rejectWithError(reject, 'Failed to find t inside.', this.eventEmitter);
+                        let opid = /opid=([A-Z0-9]+)/g.exec(body)[1];
+                        if (!opid) {
+                            return rejectWithError(reject, 'Failed to get opid', this.eventEmitter);
                         }
-
-                        resolve(t);
+                        postParams.form['opid'] = opid;
+                        this.requestWithJar.post(postParams, function (error: Error, response: any, body: any) {
+                            if (error || !response || !body) {
+                                return rejectWithError(reject, 'Failed to find t inside.', this.eventEmitter);
+                            }
+                            let $ = cheerio.load(body);
+                            //we need this magic t
+                            let t = $('input[name="t"]').val();
+                            if (!t) {
+                                rejectWithError(reject, 'Failed to find t inside.', this.eventEmitter);
+                            }
+                            resolve(t);
+                        });
                     } else {
                         rejectWithError(reject, 'Failed to get t', this.eventEmitter);
                     }

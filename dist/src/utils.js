@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Utils = exports.EventEmitter = void 0;
 var sha256 = require("js-sha256");
 var bigInt = require("big-integer");
 var EventEmitter = (function () {

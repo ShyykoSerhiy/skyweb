@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Poll = void 0;
 var request = require("request");
 var Consts = require("./../consts");
 var login_1 = require("../login");

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SkypeAccount = void 0;
 var Consts = require("./consts");
 var SkypeAccount = (function () {
     function SkypeAccount(username, password) {
@@ -14,7 +15,7 @@ var SkypeAccount = (function () {
         set: function (username) {
             this._username = username;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(SkypeAccount.prototype, "password", {
@@ -24,7 +25,7 @@ var SkypeAccount = (function () {
         set: function (password) {
             this._password = password;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(SkypeAccount.prototype, "skypeToken", {
@@ -34,7 +35,7 @@ var SkypeAccount = (function () {
         set: function (skypeToken) {
             this._skypeToken = skypeToken;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(SkypeAccount.prototype, "skypeTokenExpiresIn", {
@@ -44,7 +45,7 @@ var SkypeAccount = (function () {
         set: function (skypeTokenExpiresIn) {
             this._skypeTokenExpiresIn = skypeTokenExpiresIn;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(SkypeAccount.prototype, "messagesHost", {
@@ -54,7 +55,7 @@ var SkypeAccount = (function () {
         set: function (messagesHost) {
             this._messagesHost = messagesHost;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(SkypeAccount.prototype, "registrationTokenParams", {
@@ -64,7 +65,7 @@ var SkypeAccount = (function () {
         set: function (registrationTokenParams) {
             this._registrationTokenParams = registrationTokenParams;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(SkypeAccount.prototype, "selfInfo", {
@@ -74,7 +75,7 @@ var SkypeAccount = (function () {
         set: function (selfInfo) {
             this._selfInfo = selfInfo;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return SkypeAccount;
